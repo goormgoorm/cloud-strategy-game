@@ -5,14 +5,16 @@ class Game extends Phaser.Game {
 
     constructor(option) {
         super(option);
+        this.config.gameTitle = option.gameTitle
     }
 
     boot() {
         super.boot();
+        this.create()
     }
 
     create () {
-        console.log(this.Game)
+        // console.log(this)
         new Prolog()
     }
 }
