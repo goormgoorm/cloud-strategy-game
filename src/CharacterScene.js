@@ -6,13 +6,18 @@ class CharacterScene extends Phaser.Scene {
     }
 
     preload () {
+
         /** Register game title font */
         this.load.bitmapFont('atari', './fonts/bitmap/atari-classic.png', './fonts/bitmap/atari-classic.xml');
 
         /** egister main BGM */
         this.load.audio('track', ['./audio/track-1.mp3']);
 
-        this.load.image('face','./images/img.png');
+        this.load.image('face','./images/face.png');
+        this.load.image('face2','./images/face2.png');
+        this.load.image('face3','./images/face3.png');
+
+
         // function create ()
         // {
         //     this.add.text(10, 10, 'Enter your name:', { font: '32px Courier', fill: '#ffffff' });
@@ -59,10 +64,24 @@ class CharacterScene extends Phaser.Scene {
         this.add.bitmapText(385, 110, 'atari', 'GRUMGRUM').setOrigin(0.5).setScale(1.3);
         this.add.bitmapText(660, 480, 'atari', 'MELONA').setOrigin(0.5).setScale(0.2);
         this.add.bitmapText(650, 500, 'atari', 'MEGATHON').setOrigin(0.5).setScale(0.2);
-        this.add.image(100, 200, 'face');
-        this.add.text(100, 400, 'Enter your name', { font: '32px Courier', fill: '#ffffff' });
+        this.add.text(400, 270, 'Name', { font: '32px Courier', fill: '#ffffff' });
 
-        var textEntry = this.add.text(500, 400, '', { font: '32px Courier', fill: '#DC6561' });
+        var textEntry = this.add.text(400, 320, '', { font: '40px Courier', fill: '#DC6561' });
+
+
+        this.anims.create({
+            key: 'snooze',
+            frames: [
+                { key: 'face' , duration: 500 },
+                { key: 'face3', duration: 500  },
+                { key: 'face2', duration: 5000 },
+                { key: 'face3', duration: 500 },
+            ],
+            frameRate: 8,
+            repeat: -1
+        });
+
+        this.add.sprite(300, 300, 'cat1').play('snooze');
 
         this.input.keyboard.on('keydown', function (event) {
 
