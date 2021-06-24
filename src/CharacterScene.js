@@ -62,7 +62,6 @@ class CharacterScene extends Phaser.Scene {
 
         var textEntry = this.add.text(400, 320, '', { font: '40px Courier', fill: '#DC6561' });
 
-
         this.anims.create({
             key: 'snooze',
             frames: [

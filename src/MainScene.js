@@ -11,8 +11,14 @@ class MainScene extends Phaser.Scene {
         /** Register start button */
         this.load.image('start-button', './images/start-button.png')
 
+        /** Register clicking start button after images */
+        this.load.image('face3', './images/face3.png')
+        this.load.image('face2', './images/face2.png')
+        this.load.image('face', './images/face.png')
+
         /** Register main animation */
         this.load.path = './images/main-screen/'
+
         this.load.image('main1', 'main-img-1.png')
         this.load.image('main2', 'main-img-2.png')
         this.load.image('main3', 'main-img-3.png')
@@ -160,14 +166,56 @@ class MainScene extends Phaser.Scene {
         this.add.bitmapText(650, 500, 'atari', 'MEGATHON').setOrigin(0.5).setScale(0.2)
 
         /** Start Button */
-        const button = this.add.sprite(400, 550, 'start-button').setOrigin(0.5).setScale(0.3)
-        button.input.enabled = true
-        button.input.useHandCursor = true
+        // const button = this.add.sprite(400, 520, 'start-button').setOrigin(0.5).setScale(0.3)
+        // button.input.enabled = true
+        // button.input.useHandCursor = true
+
         // addGroup.button(400, 500, 'start-button');
         // this.input.addListener('click', function (event) {
         //     console.log(event)
         // })
+
+        let bg = this.add.image(400, 520, 'start-button').setInteractive();
+        bg.once('pointerup', function () {
+
+            this.load.once('complete', addSprites, this);
+
+            this.load.image('face3', 'face3')
+            this.load.image('face2', 'face2')
+            this.load.image('face', 'face')
+
+            this.load.start();
+
+        }, this);
+
+
     }
+}
+
+// function loadImage ()
+// {
+//     this.load.once('complete', addSprites, this);
+//
+//     this.load.image('face3', 'face3')
+//     this.load.image('face2', 'face2')
+//     this.load.image('face', 'face')
+//
+//     this.load.start();
+// }
+
+function addSprites ()
+{
+    this.add.image(400, 300, 'face3');
+    this.add.text(100, 400, 'Enter your name', { font: '32px Courier', fill: '#ffffff' })
+
+    const textEntry = this.add.text(500, 400, '', { font: '32px Courier', fill: '#DC6561' })
+    this.input.keyboard.on('keydown', function (event) {
+        if (event.keyCode === 8 && textEntry.text.length > 0) {
+            textEntry.text = textEntry.text.substr(0, textEntry.text.length - 1)
+        } else if (event.keyCode === 32 || (event.keyCode >= 48 && event.keyCode < 90)) {
+            textEntry.text += event.key
+        }
+    })
 }
 
 export {
