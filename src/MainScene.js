@@ -6,7 +6,7 @@ class MainScene extends Phaser.Scene {
         this.load.bitmapFont('atari', './fonts/bitmap/atari-classic.png', './fonts/bitmap/atari-classic.xml')
 
         /** Register main BGM */
-        this.load.audio('track', ['./audio/track-1.mp3'])
+        this.load.audio('track-1', ['./audio/track-1.mp3'])
 
         /** Register start button */
         this.load.image('start-button', './images/start-button.png')
@@ -74,17 +74,18 @@ class MainScene extends Phaser.Scene {
     create (data) {
         const config = this.game.config
         /** Play main BGM */
-        this.track = this.sound.add('track')
+        this.sound.audioPlayDelay = 0.05
+        this.sound.loopEndOffset = 0.05
+        const music = this.sound.add('track-1')
         const loopMarker = {
             name: 'loop',
             start: 0,
-            // duration: 7.68,
             config: {
                 loop: true
             }
         }
-        this.track.addMarker(loopMarker)
-        this.track.play('loop', {
+        music.addMarker(loopMarker)
+        music.play('loop', {
             delay: 0
         })
 
@@ -160,10 +161,15 @@ class MainScene extends Phaser.Scene {
         this.add.bitmapText(650, 500, 'atari', 'MEGATHON').setOrigin(0.5).setScale(0.2)
 
         /** Start Button */
+        // console.log(this)
         const button = this.add.sprite(400, 550, 'start-button').setOrigin(0.5).setScale(0.3)
-        button.input.enabled = true
-        button.input.useHandCursor = true
-        // addGroup.button(400, 500, 'start-button');
+        button.on('inputDown', function (event) {
+            console.log(event)
+        })
+
+        // button.input.enabled = true
+        // button.input.useHandCursor = true
+        // addGroup.button(400, 500, 'start-button')
         // this.input.addListener('click', function (event) {
         //     console.log(event)
         // })

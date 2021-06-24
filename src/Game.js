@@ -13,8 +13,7 @@ class Game extends Phaser.Game {
     }
 
     create () {
-        // console.log(this)
-        // new Prolog()
+        console.log(this)
     }
 }
 

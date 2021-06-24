@@ -14,5 +14,8 @@ window.addEventListener('load', function () {
 
     const game = new Game(config)
     game.scene.add('main', MainScene, true, { x: 400, y: 450 })
+    // game.playMusic(MAIN_BGM)
+    window.game = game
+    // game.play()
     // game.scene.add('main', CharacterScene, true, { x: 400, y: 450 });
 })
