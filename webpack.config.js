@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const path = require('path')
 
 module.exports = {
@@ -23,6 +24,11 @@ module.exports = {
         }),
         new CleanWebpackPlugin({
             cleanAfterEveryBuildPatterns: ['dist']
-        })
+        }),
+        new CopyWebpackPlugin([{
+            from: path.join(__dirname, 'src/assets'),
+            to: path.join(__dirname, 'dist'),
+            toType: 'dir'
+        }])
     ]
 }
