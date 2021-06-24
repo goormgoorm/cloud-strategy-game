@@ -8,7 +8,7 @@ class MainPrologScene extends Phaser.Scene {
     }
 
     preload () {
-        this.load.image('text-box', './images/text-box.png')
+        this.load.image('text-box', 'images/text-box.png')
         // this.load.bitmapFont('visitor2', './fonts/visitor2.png', './fonts/visitor2.fnt')
         // this.load.text('prolog')
     }
@@ -26,9 +26,9 @@ class MainPrologScene extends Phaser.Scene {
         // this.list.unshift('Positive reputation is safer,\nbut projects with\nnegative publicity are\nsometimes a better deal.\n\nClick this stats button\nfor detailed report.')
         // this.list.unshift('Use the management menu to\nfire/hire developers\nor to improve their skills.')
         // this.list.unshift('\'WHIP\' is used to increase\ndeveloper\'s motivation.\n\nGood luck.')
-        this.list.unshift('안녕? 친구!!\n클라우드 세상에 온 것을 환영해!\n지금부터 나와 함께 클라우드 환경 운영을 해보자고.')
-        this.list.unshift('나를 도와서 미션을 클리어 해줘.\n빨리 끝내고 집에 가고 싶어...\n야근 하고 싶지 않아ㅜ_ㅜ')
-        this.list.unshift('친구만 믿을게! 참! 친구 이름이 뭐라고 했지^^?')
+        this.list.unshift('\n안녕? 친구!!\n클라우드 세상에 온 것을 환영해!\n지금부터 나와 함께 클라우드 환경 운영을 해보자고.')
+        this.list.unshift('\n나를 도와서 미션을 클리어 해줘.\n빨리 끝내고 집에 가고 싶어...\n야근 하고 싶지 않아ㅜ_ㅜ')
+        this.list.unshift('\n친구만 믿을게! 참! 친구 이름이 뭐라고 했지^^?')
         this.commence()
 
         this.dialog.on('pointerup', function () {
@@ -52,7 +52,7 @@ class MainPrologScene extends Phaser.Scene {
         this.g.visible = true
         const current = this.list[this.list.length - 1]
         console.log(this.text)
-        this.text.x = 100
+        this.text.x = 120
         this.text.y = 400
         this.text.setText(current)
         this.list.pop()

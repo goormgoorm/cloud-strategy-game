@@ -1,6 +1,5 @@
 
 import Phaser from 'phaser'
-// import { Prolog } from './Prolog'
 class Game extends Phaser.Game {
     constructor (option) {
         super(option)
@@ -9,11 +8,6 @@ class Game extends Phaser.Game {
 
     boot () {
         super.boot()
-        this.create()
-    }
-
-    create () {
-        console.log(this)
     }
 }
 

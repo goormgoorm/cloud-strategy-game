@@ -7,21 +7,16 @@ class MainTitleScene extends Phaser.Scene {
 
     preload () {
         /** Register game title font */
-        this.load.bitmapFont('atari', './fonts/atari-classic.png', './fonts/atari-classic.xml')
+        this.load.bitmapFont('atari', 'fonts/atari-classic.png', './fonts/atari-classic.xml')
 
         /** Register main BGM */
-        this.load.audio('track-1', ['./audio/track-1.mp3'])
+        this.load.audio('track-1', ['audio/track-1.mp3'])
 
         /** Register start button */
-        this.load.image('start-button', './images/start-button.png')
-
-        /** Register clicking start button after images */
-        this.load.image('face3', './images/face3.png')
-        this.load.image('face2', './images/face2.png')
-        this.load.image('face', './images/face.png')
+        this.load.image('start-button', 'images/start-button.png')
 
         /** Register main animation */
-        this.load.path = './images/main-screen/'
+        this.load.path = 'images/main-screen/'
 
         this.load.image('main1', 'main-img-1.png')
         this.load.image('main2', 'main-img-2.png')

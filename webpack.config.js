@@ -9,7 +9,7 @@ module.exports = {
         path: path.resolve(__dirname, 'dist')
     },
     devServer: {
-        contentBase: path.resolve(__dirname, '/public/'),
+        contentBase: path.resolve(__dirname, 'src/assets'),
         inline: true,
         hot: true,
         host: 'localhost',

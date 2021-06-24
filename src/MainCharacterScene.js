@@ -6,9 +6,10 @@ class MainCharacterScene extends Phaser.Scene {
     }
 
     preload () {
-        this.load.image('face', 'face')
-        this.load.image('face2', 'face2')
-        this.load.image('face3', 'face3')
+        /** Register clicking start button after images */
+        this.load.image('face3', 'images/face3.png')
+        this.load.image('face2', 'images/face2.png')
+        this.load.image('face', 'images/face.png')
     }
 
     create () {
@@ -23,7 +24,7 @@ class MainCharacterScene extends Phaser.Scene {
             repeat: -1
         })
         this.add.sprite(100, 300, 'main1').play('face-anims')
-        this.add.text(200, 300, '이름을 다시 한번 알려주겠니?', { font: '32px Courier', fill: '#ffffff' })
+        this.add.text(200, 270, '\n이름을 다시 한번 알려주겠니?', { font: '32px Courier', fill: '#ffffff' })
 
         // this.input 은 어디갔나요 ?
         const textEntry = this.add.text(500, 400, '', { font: '32px Courier', fill: '#000' })
