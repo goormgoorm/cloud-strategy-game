@@ -74,7 +74,7 @@ class MainScene extends Phaser.Scene {
     }
 
     create (data) {
-        
+
         /** Play main BGM */
         this.track = this.sound.add('track')
         const loopMarker = {
