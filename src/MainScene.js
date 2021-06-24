@@ -91,77 +91,78 @@ class MainScene extends Phaser.Scene {
         });
 
         /** Play main animation */
-        this.anims.create({
-            key: 'snooze',
-            frames: [
-                { key: 'main1' },
-                { key: 'main2' },
-                { key: 'main3' },
-                { key: 'main4' },
-                { key: 'main5' },
-                { key: 'main6' },
-                { key: 'main7' },
-                { key: 'main8' },
-                { key: 'main9' },
-                { key: 'main10' },
-                { key: 'main11' },
-                { key: 'main12' },
-                { key: 'main13' },
-                { key: 'main14' },
-                { key: 'main15' },
-                { key: 'main16' },
-                { key: 'main17' },
-                { key: 'main18' },
-                { key: 'main19' },
-                { key: 'main20' },
-                { key: 'main21' },
-                { key: 'main22' },
-                { key: 'main23' },
-                { key: 'main24' },
-                { key: 'main25' },
-                { key: 'main26' },
-                { key: 'main27' },
-                { key: 'main28' },
-                { key: 'main29' },
-                { key: 'main30' },
-                { key: 'main31' },
-                { key: 'main32' },
-                { key: 'main33' },
-                { key: 'main34' },
-                { key: 'main35' },
-                { key: 'main36' },
-                { key: 'main108' },
-                { key: 'main109' },
-                { key: 'main110' },
-                { key: 'main111' },
-                { key: 'main112' },
-                { key: 'main113' },
-                { key: 'main114' },
-                { key: 'main115' },
-                { key: 'main116' },
-                { key: 'main117' },
-                { key: 'main118' },
-                { key: 'main119' },
-                { key: 'main120' },
-                { key: 'main121' },
-                { key: 'main122' },
-                { key: 'main123' },
-                { key: 'main124' },
-                { key: 'main125' },
-                { key: 'main126' },
-                { key: 'main127', duration: 50 }
-            ],
-            frameRate: 8,
-            repeat: -1
-        });
-
-        this.add.sprite(400, 300, 'main1')
-            .play('snooze');
+        // this.anims.create({
+        //     key: 'snooze',
+        //     frames: [
+        //         { key: 'main1' },
+        //         { key: 'main2' },
+        //         { key: 'main3' },
+        //         { key: 'main4' },
+        //         { key: 'main5' },
+        //         { key: 'main6' },
+        //         { key: 'main7' },
+        //         { key: 'main8' },
+        //         { key: 'main9' },
+        //         { key: 'main10' },
+        //         { key: 'main11' },
+        //         { key: 'main12' },
+        //         { key: 'main13' },
+        //         { key: 'main14' },
+        //         { key: 'main15' },
+        //         { key: 'main16' },
+        //         { key: 'main17' },
+        //         { key: 'main18' },
+        //         { key: 'main19' },
+        //         { key: 'main20' },
+        //         { key: 'main21' },
+        //         { key: 'main22' },
+        //         { key: 'main23' },
+        //         { key: 'main24' },
+        //         { key: 'main25' },
+        //         { key: 'main26' },
+        //         { key: 'main27' },
+        //         { key: 'main28' },
+        //         { key: 'main29' },
+        //         { key: 'main30' },
+        //         { key: 'main31' },
+        //         { key: 'main32' },
+        //         { key: 'main33' },
+        //         { key: 'main34' },
+        //         { key: 'main35' },
+        //         { key: 'main36' },
+        //         { key: 'main108' },
+        //         { key: 'main109' },
+        //         { key: 'main110' },
+        //         { key: 'main111' },
+        //         { key: 'main112' },
+        //         { key: 'main113' },
+        //         { key: 'main114' },
+        //         { key: 'main115' },
+        //         { key: 'main116' },
+        //         { key: 'main117' },
+        //         { key: 'main118' },
+        //         { key: 'main119' },
+        //         { key: 'main120' },
+        //         { key: 'main121' },
+        //         { key: 'main122' },
+        //         { key: 'main123' },
+        //         { key: 'main124' },
+        //         { key: 'main125' },
+        //         { key: 'main126' },
+        //         { key: 'main127', duration: 50 }
+        //     ],
+        //     frameRate: 8,
+        //     repeat: -1
+        // });
+        // this.add.sprite(400, 300, 'main1').play('snooze');
 
         /** Add game title font */
         this.add.bitmapText(385, 110, 'atari', 'GRUMGRUM').setOrigin(0.5).setScale(1.3);
         this.add.bitmapText(660, 480, 'atari', 'MELONA').setOrigin(0.5).setScale(0.2);
         this.add.bitmapText(650, 500, 'atari', 'MEGATHON').setOrigin(0.5).setScale(0.2);
+
+        /** Start Button */
+        this.add.text(400, 500, 'START', { font: '30px', fill: '#232422'}).setOrigin(0.5).setScale(1.5)
     }
 }
 

@@ -8,9 +8,12 @@ window.addEventListener("load", function () {
         type: Phaser.AUTO,
         width: 800,
         height: 600,
-        backgroundColor: '#4eade6'
+        backgroundColor: '#4eade6',
+        gameTitle: 'GRUMGRUM'
     };
 
     const game = new Game(config);
+    console.log(game.config)
     game.scene.add('main', MainScene, true, { x: 400, y: 450 });
+    // game.start()
 });
