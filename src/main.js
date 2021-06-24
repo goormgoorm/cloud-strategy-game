@@ -1,7 +1,7 @@
-import { Game } from './Game'
-import { MainScene } from './MainScene'
 import Phaser from 'phaser'
-// import { CharacterScene } from './CharacterScene'
+import { Game } from './Game'
+import { MainTitleScene } from './MainTitleScene'
+import { MainCharacterScene } from './MainCharacterScene'
 
 window.addEventListener('load', function () {
     const config = {
@@ -9,13 +9,9 @@ window.addEventListener('load', function () {
         width: 800,
         height: 600,
         backgroundColor: '#4eade6',
-        gameTitle: 'GRUMGRUM'
+        gameTitle: 'GRUMGRUM',
+        scene: [MainTitleScene, MainCharacterScene]
     }
 
-    const game = new Game(config)
-    game.scene.add('main', MainScene, true, { x: 400, y: 450 })
-    // game.playMusic(MAIN_BGM)
-    window.game = game
-    // game.play()
-    // game.scene.add('main', CharacterScene, true, { x: 400, y: 450 });
+    window.game = new Game(config)
 })

@@ -1,6 +1,10 @@
 import Phaser from 'phaser'
+import { SCENE_MAIN_TITLE, SCENE_MAIN_CHARACTER } from './constant'
+class MainTitleScene extends Phaser.Scene {
+    constructor () {
+        super(SCENE_MAIN_TITLE)
+    }
 
-class MainScene extends Phaser.Scene {
     preload () {
         /** Register game title font */
         this.load.bitmapFont('atari', './fonts/bitmap/atari-classic.png', './fonts/bitmap/atari-classic.xml')
@@ -11,8 +15,14 @@ class MainScene extends Phaser.Scene {
         /** Register start button */
         this.load.image('start-button', './images/start-button.png')
 
+        /** Register clicking start button after images */
+        this.load.image('face3', './images/face3.png')
+        this.load.image('face2', './images/face2.png')
+        this.load.image('face', './images/face.png')
+
         /** Register main animation */
         this.load.path = './images/main-screen/'
+
         this.load.image('main1', 'main-img-1.png')
         this.load.image('main2', 'main-img-2.png')
         this.load.image('main3', 'main-img-3.png')
@@ -71,8 +81,7 @@ class MainScene extends Phaser.Scene {
         this.load.image('main127', 'main-img-127.png')
     }
 
-    create (data) {
-        const config = this.game.config
+    create () {
         /** Play main BGM */
         this.sound.audioPlayDelay = 0.05
         this.sound.loopEndOffset = 0.05
@@ -156,26 +165,19 @@ class MainScene extends Phaser.Scene {
         this.add.sprite(400, 300, 'main1').play('snooze')
 
         /** Add game title font */
+        const config = this.game.config
         this.add.bitmapText(385, 110, 'atari', config.gameTitle).setOrigin(0.5).setScale(1.3)
         this.add.bitmapText(660, 480, 'atari', 'MELONA').setOrigin(0.5).setScale(0.2)
         this.add.bitmapText(650, 500, 'atari', 'MEGATHON').setOrigin(0.5).setScale(0.2)
 
         /** Start Button */
-        // console.log(this)
-        const button = this.add.sprite(400, 550, 'start-button').setOrigin(0.5).setScale(0.3)
-        button.on('inputDown', function (event) {
-            console.log(event)
-        })
-
-        // button.input.enabled = true
-        // button.input.useHandCursor = true
-        // addGroup.button(400, 500, 'start-button')
-        // this.input.addListener('click', function (event) {
-        //     console.log(event)
-        // })
+        const button = this.add.sprite(400, 550, 'start-button').setOrigin(0.5).setScale(1).setInteractive()
+        button.on('pointerup', function () {
+            this.scene.start(SCENE_MAIN_CHARACTER)
+        }, this)
     }
 }
 
 export {
-    MainScene
+    MainTitleScene
 }
