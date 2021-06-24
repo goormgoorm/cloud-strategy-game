@@ -8,7 +8,7 @@ window.addEventListener("load", function () {
         type: Phaser.AUTO,
         width: 800,
         height: 600,
-        backgroundColor: '#3ab8f2'
+        backgroundColor: '#4eade6'
     };
 
     const game = new Game(config);
