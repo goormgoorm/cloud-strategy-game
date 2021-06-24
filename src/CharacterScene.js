@@ -1,22 +1,17 @@
-import Phaser from 'phaser';
+import Phaser from 'phaser'
 
 class CharacterScene extends Phaser.Scene {
-    constructor (config) {
-        super (config);
-    }
-
     preload () {
 
         /** Register game title font */
-        this.load.bitmapFont('atari', './fonts/bitmap/atari-classic.png', './fonts/bitmap/atari-classic.xml');
+        this.load.bitmapFont('atari', './fonts/bitmap/atari-classic.png', './fonts/bitmap/atari-classic.xml')
 
         /** egister main BGM */
-        this.load.audio('track', ['./audio/track-1.mp3']);
+        this.load.audio('track', ['./audio/track-1.mp3'])
 
         this.load.image('face','./images/face.png');
         this.load.image('face2','./images/face2.png');
         this.load.image('face3','./images/face3.png');
-
 
         // function create ()
         // {
@@ -38,7 +33,6 @@ class CharacterScene extends Phaser.Scene {
         //     });
         // }
         // create();
-
     }
 
     create (data) {
@@ -51,11 +45,11 @@ class CharacterScene extends Phaser.Scene {
             config: {
                 loop: true
             }
-        };
-        this.track.addMarker(loopMarker);
+        }
+        this.track.addMarker(loopMarker)
         this.track.play('loop', {
             delay: 0
-        });
+        })
 
         // this.add.sprite(400, 300, 'main1')
         //     .play('snooze');
@@ -82,19 +76,18 @@ class CharacterScene extends Phaser.Scene {
         });
 
         this.add.sprite(300, 300, 'cat1').play('snooze');
+        this.add.image(100, 200, 'face')
+        this.add.text(100, 400, 'Enter your name', { font: '32px Courier', fill: '#ffffff' })
+
+        const textEntry = this.add.text(500, 400, '', { font: '32px Courier', fill: '#DC6561' })
 
         this.input.keyboard.on('keydown', function (event) {
-
-            if (event.keyCode === 8 && textEntry.text.length > 0)
-            {
-                textEntry.text = textEntry.text.substr(0, textEntry.text.length - 1);
+            if (event.keyCode === 8 && textEntry.text.length > 0) {
+                textEntry.text = textEntry.text.substr(0, textEntry.text.length - 1)
+            } else if (event.keyCode === 32 || (event.keyCode >= 48 && event.keyCode < 90)) {
+                textEntry.text += event.key
             }
-            else if (event.keyCode === 32 || (event.keyCode >= 48 && event.keyCode < 90))
-            {
-                textEntry.text += event.key;
-            }
-
-        });
+        })
     }
 }
 
