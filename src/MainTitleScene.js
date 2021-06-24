@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import { SCENE_MAIN_TITLE, SCENE_MAIN_CHARACTER } from './constant'
+import { SCENE_MAIN_TITLE, SCENE_MAIN_PROLOG } from './constant'
 class MainTitleScene extends Phaser.Scene {
     constructor () {
         super(SCENE_MAIN_TITLE)
@@ -7,7 +7,7 @@ class MainTitleScene extends Phaser.Scene {
 
     preload () {
         /** Register game title font */
-        this.load.bitmapFont('atari', './fonts/bitmap/atari-classic.png', './fonts/bitmap/atari-classic.xml')
+        this.load.bitmapFont('atari', './fonts/atari-classic.png', './fonts/atari-classic.xml')
 
         /** Register main BGM */
         this.load.audio('track-1', ['./audio/track-1.mp3'])
@@ -173,7 +173,8 @@ class MainTitleScene extends Phaser.Scene {
         /** Start Button */
         const button = this.add.sprite(400, 550, 'start-button').setOrigin(0.5).setScale(1).setInteractive()
         button.on('pointerup', function () {
-            this.scene.start(SCENE_MAIN_CHARACTER)
+            // this.scene.start(SCENE_MAIN_CHARACTER)
+            this.scene.start(SCENE_MAIN_PROLOG)
         }, this)
     }
 }
