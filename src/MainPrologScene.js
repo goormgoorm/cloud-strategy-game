@@ -15,7 +15,7 @@ class MainPrologScene extends Phaser.Scene {
 
     create () {
         this.g = this.add.group()
-        this.dialog = this.add.sprite(400, 450, 'text-box').setOrigin(0.5).setScale(1.0).setInteractive()
+        this.dialog = this.add.sprite(400, 450, 'text-box').setOrigin(0.5).setScale(0.9).setInteractive()
         // this.text = this.add.bitmapText(0, 0, 'visitor2', '', 16)
         this.text = this.add.text(0, 0, '', { font: '24px', fill: '#000' })
         // this.text.smoothed = false
@@ -26,9 +26,9 @@ class MainPrologScene extends Phaser.Scene {
         // this.list.unshift('Positive reputation is safer,\nbut projects with\nnegative publicity are\nsometimes a better deal.\n\nClick this stats button\nfor detailed report.')
         // this.list.unshift('Use the management menu to\nfire/hire developers\nor to improve their skills.')
         // this.list.unshift('\'WHIP\' is used to increase\ndeveloper\'s motivation.\n\nGood luck.')
-        this.list.unshift('\n안녕? 친구!!\n클라우드 세상에 온 것을 환영해!\n지금부터 나와 함께 클라우드 환경 운영을 해보자고.')
-        this.list.unshift('\n나를 도와서 미션을 클리어 해줘.\n빨리 끝내고 집에 가고 싶어...\n야근 하고 싶지 않아ㅜ_ㅜ')
-        this.list.unshift('\n친구만 믿을게! 참! 친구 이름이 뭐라고 했지^^?')
+        this.list.unshift('\n안녕, 구름구름 서비스에 접속한 걸 환영해!\n우리 구름구름 서비스에 대해 잠깐 설명하자면 \n현재 사용자가 10만명을 돌파하고, \n곧 해외에도 오픈 예정인 인기있는 게임 서비스야.')
+        this.list.unshift('\n그런데 사용자가 급격하게 많아져서 속도도 느려지고, \n서비스도 중단되는 상황이 많아져서 \n우리 사용자들이 경쟁업체로 눈을 돌리려고 해.')
+        this.list.unshift('\n친구가 도와줄 수 있겠니? \n친구만 믿을게! \n참! 친구 이름이 뭐라고 했지 :)?')
         this.commence()
 
         this.dialog.on('pointerup', function () {
@@ -53,7 +53,7 @@ class MainPrologScene extends Phaser.Scene {
         const current = this.list[this.list.length - 1]
         // console.log(this.text)
         this.text.x = 120
-        this.text.y = 400
+        this.text.y = 350
         this.text.setText(current)
         this.list.pop()
     }
