@@ -1,0 +1,53 @@
+[
+    {
+        "title": "Change EC2 Type Up",
+        "description": "EC2 인스턴스의 성능을 올린다",
+        "point": 10,
+        "service": "server",
+        "events": [
+            ""
+        ]
+    },
+    {
+        "title": "Change EC2 Type Down",
+        "description": "EC2 인스턴스의 성능을 낮춘다",
+        "point": 10,
+        "service": "server",
+        "events": [
+            ""
+        ]
+    },
+    {
+        "title": "Set Strong Security Group",
+        "description": "강력한 보안그룹을 설정한다",
+        "point": 15,
+        "service": "Security",
+        "events": [
+            ""
+        ]
+    },
+    {
+        "title": "",
+        "description": "",
+        "service": "server",
+        "events": [
+            ""
+        ]
+    },
+    {
+        "title": "",
+        "description": "",
+        "service": "server",
+        "events": [
+            ""
+        ]
+    },
+    {
+        "title": "",
+        "description": "",
+        "service": "server",
+        "events": [
+            ""
+        ]
+    }
+]
