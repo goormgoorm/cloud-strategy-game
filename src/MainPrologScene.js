@@ -28,7 +28,7 @@ class MainPrologScene extends Phaser.Scene {
         // this.list.unshift('\'WHIP\' is used to increase\ndeveloper\'s motivation.\n\nGood luck.')
         this.list.unshift('\n안녕, 구름구름 서비스에 접속한 걸 환영해!\n우리 구름구름 서비스에 대해 잠깐 설명하자면 \n현재 사용자가 10만명을 돌파하고, \n곧 해외에도 오픈 예정인 인기있는 게임 서비스야.')
         this.list.unshift('\n그런데 사용자가 급격하게 많아져서 속도도 느려지고, \n서비스도 중단되는 상황이 많아져서 \n우리 사용자들이 경쟁업체로 눈을 돌리려고 해.')
-        this.list.unshift('\n친구가 도와줄 수 있겠니? \n친구만 믿을게! \n참! 친구 이름이 뭐라고 했지 :)?')
+        this.list.unshift('\n친구가 도와줄 수 있겠니? \n참! 친구 이름이 뭐라고 했지?')
         this.commence()
 
         this.dialog.on('pointerup', function () {
