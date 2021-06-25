@@ -9,6 +9,8 @@ class PlayGameScene extends Phaser.Scene {
         this.load.bitmapFont('atari', 'fonts/atari-classic.png', './fonts/atari-classic.xml')
 
         this.load.image('play-screen', 'images/play-screen.png')
+        this.load.image('service-task', 'images/service-task.png')
+
 
         this.load.path = 'images/aws/'
         this.load.image('authentication', 'authentication.png')
@@ -46,6 +48,51 @@ class PlayGameScene extends Phaser.Scene {
         const lambda = this.add.sprite(750, 370, 'lambda').setOrigin(0.5).setScale(0.08).setInteractive()
         this.add.bitmapText(750, 410, 'atari', 'EVENT').setOrigin(0.5).setScale(0.17)
 
+        ec2.on('pointerup', function () {
+            const s3 = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
+            // this.commence()
+        }, this)
+
+        rds.on('pointerup', function () {
+            const s3 = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
+            // this.commence()
+        }, this)
+
+
+        autoscaling.on('pointerup', function () {
+            const s3 = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
+            // this.commence()
+        }, this)
+
+        elb.on('pointerup', function () {
+            const s3 = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
+            // this.commence()
+        }, this)
+
+        cloudwatch.on('pointerup', function () {
+            const s3 = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
+            // this.commence()
+        }, this)
+
+        autoscaling.on('pointerup', function () {
+            const s3 = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
+            // this.commence()
+        }, this)
+
+        vpc.on('pointerup', function () {
+            const s3 = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
+            // this.commence()
+        }, this)
+
+        s3.on('pointerup', function () {
+            const s3 = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
+            // this.commence()
+        }, this)
+
+        lambda.on('pointerup', function () {
+            const s3 = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
+            // this.commence()
+        }, this)
     }
 
 }
