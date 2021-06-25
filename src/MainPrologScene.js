@@ -51,7 +51,7 @@ class MainPrologScene extends Phaser.Scene {
         }
         this.g.visible = true
         const current = this.list[this.list.length - 1]
-        console.log(this.text)
+        // console.log(this.text)
         this.text.x = 120
         this.text.y = 400
         this.text.setText(current)

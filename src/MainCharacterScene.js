@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import { SCENE_MAIN_CHARACTER } from './constant'
+import { SCENE_MAIN_CHARACTER, SCENE_PLAY_GAME } from './constant'
 class MainCharacterScene extends Phaser.Scene {
     constructor () {
         super(SCENE_MAIN_CHARACTER)
@@ -10,6 +10,7 @@ class MainCharacterScene extends Phaser.Scene {
         this.load.image('face3', 'images/face3.png')
         this.load.image('face2', 'images/face2.png')
         this.load.image('face', 'images/face.png')
+        this.load.image('input', 'images/button_white.png')
     }
 
     create () {
@@ -23,18 +24,23 @@ class MainCharacterScene extends Phaser.Scene {
             frameRate: 8,
             repeat: -1
         })
-        this.add.sprite(100, 300, 'main1').play('face-anims')
-        this.add.text(200, 270, '\n이름을 다시 한번 알려주겠니?', { font: '32px Courier', fill: '#ffffff' })
+        this.add.sprite(150, 250, 'main1').play('face-anims')
+        this.add.text(220, 200, '\n이름을 다시 한번 알려주겠니?', { font: '32px Courier', fill: '#ffffff' })
+        this.add.sprite(450, 320, 'input').setOrigin(0.5).setScale(0.3)
 
-        // this.input 은 어디갔나요 ?
-        const textEntry = this.add.text(500, 400, '', { font: '32px Courier', fill: '#000' })
+        const textEntry = this.add.text(340, 300, '', { font: '32px Courier', fill: '#000' })
         this.input.keyboard.on('keydown', function (event) {
+            if (event.keyCode === 13 && textEntry.text.length > 0) {
+                this.scene.start(SCENE_PLAY_GAME)
+            }
             if (event.keyCode === 8 && textEntry.text.length > 0) {
                 textEntry.text = textEntry.text.substr(0, textEntry.text.length - 1)
+            } else if (textEntry.text.length > 10) {
+                return true
             } else if (event.keyCode === 32 || (event.keyCode >= 48 && event.keyCode < 90)) {
                 textEntry.text += event.key
             }
-        })
+        }, this)
     }
 }
 
