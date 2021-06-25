@@ -11,7 +11,6 @@ class PlayGameScene extends Phaser.Scene {
         this.load.image('play-screen', 'images/play-screen.png')
 
         this.load.path = 'images/aws/'
-
         this.load.image('authentication', 'authentication.png')
         this.load.image('s3', 'bucket.png')
         this.load.image('cloudwatch', 'cloudwatch.png')
@@ -47,20 +46,8 @@ class PlayGameScene extends Phaser.Scene {
         const lambda = this.add.sprite(750, 370, 'lambda').setOrigin(0.5).setScale(0.08).setInteractive()
         this.add.bitmapText(750, 410, 'atari', 'EVENT').setOrigin(0.5).setScale(0.17)
 
-
-        button.on('vpc', actionOnClick, this)
-
-        // let button = game.add.button(100, 400, 'vpc', actionOnClick, this);
-        // button.onInputOver.add(over, this);
-        // button.onInputOut.add(out, this);
-        // button.onInputUp.add(up, this);
-
     }
 
-}
-
-function actionOnClick () {
-    console.log('clicked');
 }
 
 export {
