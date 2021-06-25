@@ -1,0 +1,34 @@
+[
+    {
+        "title": "Hacker attack",
+        "description": "해커가 해킹을 시도합니다",
+        "point": 100,
+        "defenseActions": [
+            "Set Strong Security Group"
+        ]
+    },
+    {
+        "title": "Over Traffic",
+        "description": "이벤트로 인해 많은 트래픽이 발생합니다",
+        "point": 100,
+        "defenseActions": [
+            "Change EC2 Type Up"
+        ]
+    },
+    {
+        "title": "Request Internal Security",
+        "description": "내부 보안 정책 강화를 요청합니다",
+        "point": 100,
+        "defenseActions": [
+
+        ]
+    },
+    {
+        "title": "Request Cost Savings",
+        "description": "비용 절감을 요청합니다",
+        "point": 100,
+        "defenseActions": [
+
+        ]
+    }
+]
