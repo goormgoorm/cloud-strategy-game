@@ -15,7 +15,7 @@ class PlayGameScene extends Phaser.Scene {
         this.load.image('close-button', 'images/close-button.png')
 
         this.load.json('actions', 'actions.json')
-
+        this.load.json('season', 'season.json')
         this.load.path = 'images/action/'
         this.load.image('storage', 'storage.png')
         this.load.image('monitor', 'monitor.png')
@@ -28,9 +28,15 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     create () {
+        this.seasonIndex = 0
+        this.season = this.cache.json.get('season')[this.seasonIndex]
         this.add.sprite(400, 300, 'play-screen')
         this.add.sprite(400, 30, 'score').setScale(0.3)
+
+        // calender
         this.add.sprite(540, 210, 'calender').setScale(0.25)
+        this.month = this.add.bitmapText(540, 200, 'atari', '').setScale(0.5).setOrigin(0.5).setFontSize(20).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
+        this.day = this.add.bitmapText(540, 230, 'atari', '').setScale(0.5).setOrigin(0.5).setFontSize(40).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
         // left
         const server = this.add.sprite(60, 100, 'server').setOrigin(0.5).setScale(0.08).setInteractive()
         server.name = 'server'
@@ -67,6 +73,11 @@ class PlayGameScene extends Phaser.Scene {
         this.tasks = {}
     }
 
+    update () {
+        this.season = this.cache.json.get('season')[this.seasonIndex]
+        this.month.setText(this.season.name)
+    }
+
     onOpenTaskEvent (service) {
         this.image = this.add.sprite(400, 300, 'service-task')
         this.close = this.add.sprite(645, 100, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
@@ -75,7 +86,7 @@ class PlayGameScene extends Phaser.Scene {
         this.tasks[service.name] = []
         const data = this.cache.json.get('actions').filter(item => item.service === service.name)
         data.forEach((action, index) => {
-            console.log(action.description)
+            // console.log(action.description)
             const text = this.add.bitmapText(150, 220 + (index * 20), 'atari', action.title).setScale(0.3)
             this.tasks[service.name].push(text)
         })
@@ -88,12 +99,19 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     createTimeEvent () {
-        // timedEvent = this.time.addEvent({ delay: 500, callback: onEvent, callbackScope: this, loop: true });
+        this.timedEvent = this.time.addEvent({ delay: 365, callback: this.onTimeEvent, callbackScope: this, loop: true })
         // console.log(this.time.create)
     }
 
     onTimeEvent () {
-
+        // console.log(this.time.now)
+        if (this.day.text < this.season.days) {
+            this.day.setText(++this.day.text)
+        } else {
+            this.seasonIndex++
+            this.day.setText(1)
+        }
+        // console.log(this.timedEvent.getProgress())
     }
 }
 
