@@ -6,6 +6,7 @@ class GameOverFailScene extends Phaser.Scene {
     }
 
     preload () {
+        console.log(this.game)
         //
     }
 

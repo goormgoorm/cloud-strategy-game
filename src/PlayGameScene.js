@@ -28,15 +28,18 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     create () {
+        const year = 2021
         this.seasonIndex = 0
+        this.startDay = 1
         this.season = this.cache.json.get('season')[this.seasonIndex]
         this.add.sprite(400, 300, 'play-screen')
         this.add.sprite(400, 30, 'score').setScale(0.3)
 
         // calender
         this.add.sprite(540, 210, 'calender').setScale(0.25)
-        this.month = this.add.bitmapText(540, 200, 'atari', '').setScale(0.5).setOrigin(0.5).setFontSize(20).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
-        this.day = this.add.bitmapText(540, 230, 'atari', '1').setScale(0.5).setOrigin(0.5).setFontSize(40).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
+        this.add.bitmapText(540, 175, 'atari', year).setScale(0.5).setOrigin(0.5).setFontSize(18)
+        this.month = this.add.bitmapText(540, 200, 'atari', '').setScale(0.5).setOrigin(0.5).setFontSize(25).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
+        this.day = this.add.bitmapText(540, 230, 'atari', this.startDay).setScale(0.5).setOrigin(0.5).setFontSize(40).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
         // left
         const server = this.add.sprite(60, 100, 'server').setOrigin(0.5).setScale(0.08).setInteractive()
         server.name = 'server'
@@ -113,6 +116,7 @@ class PlayGameScene extends Phaser.Scene {
             this.seasonIndex++
             if (this.seasonIndex === 12) {
                 this.timedEvent.remove()
+                this.game.sound.destroy()
                 this.scene.start(SCENE_GAME_OVER_FAIL)
             } else {
                 this.day.setText(1)
