@@ -17,7 +17,6 @@ class PlayGameScene extends Phaser.Scene {
         this.load.json('actions', 'actions.json')
 
         this.load.path = 'images/action/'
-        this.load.image('security', 'security.png')
         this.load.image('storage', 'storage.png')
         this.load.image('monitor', 'monitor.png')
         this.load.image('database', 'database.png')
@@ -59,15 +58,15 @@ class PlayGameScene extends Phaser.Scene {
         this.createTimer()
     }
 
-    handlePointerup () {
-        const image =  this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1.0).setInteractive();
-        const close =  this.add.sprite(655, 100, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive();
-        const description = this.cache.json.get('actions')[0].description;
-        const text = this.add.bitmapText(200, 220, 'atari', description).setOrigin(0.5).setScale(0.3);
+    handlePointerup (event) {
+        const image = this.add.sprite(400, 300, 'service-task')
+        const close = this.add.sprite(645, 100, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
+        const description = this.cache.json.get('actions')[0].description
+        const text = this.add.bitmapText(200, 220, 'atari', description).setOrigin(0.5).setScale(0.3)
         close.on('pointerup', function () {
-            image.destroy();
-            close.destroy();
-            text.destroy();
+            image.destroy()
+            close.destroy()
+            text.destroy()
         }, this)
     }
 
