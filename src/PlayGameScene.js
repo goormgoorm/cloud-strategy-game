@@ -110,12 +110,13 @@ class PlayGameScene extends Phaser.Scene {
         if (this.day.text < this.season.days) {
             this.day.setText(++this.day.text)
         } else {
+            this.seasonIndex++
             if (this.seasonIndex === 12) {
                 this.timedEvent.remove()
                 this.scene.start(SCENE_GAME_OVER_FAIL)
+            } else {
+                this.day.setText(1)
             }
-            this.seasonIndex++
-            this.day.setText(1)
         }
     }
 }
