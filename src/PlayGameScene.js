@@ -27,7 +27,7 @@ class PlayGameScene extends Phaser.Scene {
     create () {
         this.add.sprite(400, 300, 'play-screen')
         this.add.sprite(400, 30, 'score').setScale(0.3)
-        this.add.sprite(540, 220, 'calender').setScale(0.2)
+        this.add.sprite(540, 210, 'calender').setScale(0.25)
         // left
         const server = this.add.sprite(60, 100, 'server').setOrigin(0.5).setScale(0.08).setInteractive()
         this.add.bitmapText(60, 140, 'atari', 'SERVER').setOrigin(0.5).setScale(0.17)
@@ -50,10 +50,10 @@ class PlayGameScene extends Phaser.Scene {
 
         /** add event */
         const actions = [server, database, security, autoscaling, monitor, network, storage, event]
-        actions.forEach(service => service.on('pointerup', this.handlerPointerup, this))
+        actions.forEach(service => service.on('pointerup', this.handlePointerup, this))
     }
 
-    handlerPointerup () {
+    handlePointerup () {
         this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1.0).setInteractive()
     }
 }
