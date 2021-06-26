@@ -21,7 +21,7 @@
         "title": "Set Strong Security Group",
         "description": "강력한 보안그룹을 설정한다",
         "point": 15,
-        "service": "Security",
+        "service": "security",
         "events": [
             ""
         ]
@@ -29,7 +29,7 @@
     {
         "title": "",
         "description": "",
-        "service": "server",
+        "service": "database",
         "events": [
             ""
         ]
@@ -37,7 +37,7 @@
     {
         "title": "",
         "description": "",
-        "service": "server",
+        "service": "autoscaling",
         "events": [
             ""
         ]
@@ -45,7 +45,7 @@
     {
         "title": "",
         "description": "",
-        "service": "server",
+        "service": "monitor",
         "events": [
             ""
         ]

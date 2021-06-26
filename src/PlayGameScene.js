@@ -33,45 +33,67 @@ class PlayGameScene extends Phaser.Scene {
         this.add.sprite(540, 210, 'calender').setScale(0.25)
         // left
         const server = this.add.sprite(60, 100, 'server').setOrigin(0.5).setScale(0.08).setInteractive()
+        server.name = 'server'
         this.add.bitmapText(60, 140, 'atari', 'SERVER').setOrigin(0.5).setScale(0.17)
         const database = this.add.sprite(60, 200, 'database').setOrigin(0.5).setScale(0.08).setInteractive()
+        database.name = 'database'
         this.add.bitmapText(60, 240, 'atari', 'DATABASE').setOrigin(0.5).setScale(0.17)
         const security = this.add.sprite(60, 300, 'autoscaling').setOrigin(0.5).setScale(0.08).setInteractive()
+        security.name = 'security'
         this.add.bitmapText(60, 340, 'atari', 'SECURITY').setOrigin(0.5).setScale(0.17)
         const autoscaling = this.add.sprite(60, 400, 'loadbalancing').setOrigin(0.5).setScale(0.08).setInteractive()
+        autoscaling.name = 'autoscaling'
         this.add.bitmapText(60, 440, 'atari', 'SCALING').setOrigin(0.5).setScale(0.17)
 
         // right
         const monitor = this.add.sprite(750, 100, 'monitor').setOrigin(0.5).setScale(0.08).setInteractive()
+        monitor.name = 'monitor'
         this.add.bitmapText(750, 140, 'atari', 'MONITOR').setOrigin(0.5).setScale(0.17)
         const network = this.add.sprite(750, 200, 'network').setOrigin(0.5).setScale(0.08).setInteractive()
+        network.name = 'network'
         this.add.bitmapText(750, 240, 'atari', 'NETWORK').setOrigin(0.5).setScale(0.17)
         const storage = this.add.sprite(750, 300, 'storage').setOrigin(0.5).setScale(0.08).setInteractive()
+        storage.name = 'storage'
         this.add.bitmapText(750, 340, 'atari', 'STORAGE').setOrigin(0.5).setScale(0.17)
         const event = this.add.sprite(750, 400, 'event').setOrigin(0.5).setScale(0.08).setInteractive()
+        event.name = 'event'
         this.add.bitmapText(750, 440, 'atari', 'EVENT').setOrigin(0.5).setScale(0.17)
 
         /** add event */
         const actions = [server, database, security, autoscaling, monitor, network, storage, event]
-        actions.forEach(service => service.on('pointerup', this.handlePointerup, this))
+        actions.forEach(service => service.on('pointerup', this.onOpenTaskEvent.bind(this, service), this))
 
-        this.createTimer()
+        this.createTimeEvent()
+        this.tasks = {}
     }
 
-    handlePointerup (event) {
-        const image = this.add.sprite(400, 300, 'service-task')
-        const close = this.add.sprite(645, 100, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
-        const description = this.cache.json.get('actions')[0].description
-        const text = this.add.bitmapText(200, 220, 'atari', description).setOrigin(0.5).setScale(0.3)
-        close.on('pointerup', function () {
-            image.destroy()
-            close.destroy()
-            text.destroy()
-        }, this)
+    onOpenTaskEvent (service) {
+        this.image = this.add.sprite(400, 300, 'service-task')
+        this.close = this.add.sprite(645, 100, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
+        this.close.on('pointerup', this.onCloseTaskEvent.bind(this, service), this)
+
+        this.tasks[service.name] = []
+        const data = this.cache.json.get('actions').filter(item => item.service === service.name)
+        data.forEach((action, index) => {
+            console.log(action.description)
+            const text = this.add.bitmapText(150, 220 + (index * 20), 'atari', action.title).setScale(0.3)
+            this.tasks[service.name].push(text)
+        })
     }
 
-    createTimer () {
-        console.log(this.time.create)
+    onCloseTaskEvent (service) {
+        this.image.destroy()
+        this.close.destroy()
+        this.tasks[service.name].forEach(task => task.destroy())
+    }
+
+    createTimeEvent () {
+        // timedEvent = this.time.addEvent({ delay: 500, callback: onEvent, callbackScope: this, loop: true });
+        // console.log(this.time.create)
+    }
+
+    onTimeEvent () {
+
     }
 }
 
