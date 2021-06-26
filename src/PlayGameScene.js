@@ -79,6 +79,7 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     onOpenTaskEvent (service) {
+        this.timedEvent.paused = true
         this.image = this.add.sprite(400, 300, 'service-task')
         this.close = this.add.sprite(645, 100, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.close.on('pointerup', this.onCloseTaskEvent.bind(this, service), this)
@@ -96,22 +97,23 @@ class PlayGameScene extends Phaser.Scene {
         this.image.destroy()
         this.close.destroy()
         this.tasks[service.name].forEach(task => task.destroy())
+        this.timedEvent.paused = false
     }
 
     createTimeEvent () {
         this.timedEvent = this.time.addEvent({ delay: 365, callback: this.onTimeEvent, callbackScope: this, loop: true })
-        // console.log(this.time.create)
     }
 
     onTimeEvent () {
-        // console.log(this.time.now)
         if (this.day.text < this.season.days) {
             this.day.setText(++this.day.text)
         } else {
+            if (this.seasonIndex === 11) {
+                this.timedEvent.remove()
+            }
             this.seasonIndex++
             this.day.setText(1)
         }
-        // console.log(this.timedEvent.getProgress())
     }
 }
 
