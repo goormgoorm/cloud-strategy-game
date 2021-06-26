@@ -9,6 +9,8 @@ class PlayGameScene extends Phaser.Scene {
         this.load.bitmapFont('atari', 'fonts/atari-classic.png', './fonts/atari-classic.xml')
         this.load.image('play-screen', 'images/play-screen.png')
         this.load.image('service-task', 'images/service-task.png')
+        this.load.image('calender', 'images/calender-2.png')
+        this.load.image('score', 'images/score.png')
 
         this.load.path = 'images/action/'
         this.load.image('security', 'security.png')
@@ -24,7 +26,8 @@ class PlayGameScene extends Phaser.Scene {
 
     create () {
         this.add.sprite(400, 300, 'play-screen')
-
+        this.add.sprite(400, 30, 'score').setScale(0.3)
+        this.add.sprite(540, 220, 'calender').setScale(0.2)
         // left
         const server = this.add.sprite(60, 100, 'server').setOrigin(0.5).setScale(0.08).setInteractive()
         this.add.bitmapText(60, 140, 'atari', 'SERVER').setOrigin(0.5).setScale(0.17)
@@ -45,47 +48,13 @@ class PlayGameScene extends Phaser.Scene {
         const event = this.add.sprite(750, 400, 'event').setOrigin(0.5).setScale(0.08).setInteractive()
         this.add.bitmapText(750, 440, 'atari', 'EVENT').setOrigin(0.5).setScale(0.17)
 
-        server.on('pointerup', function () {
-            const server = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
-            // this.commence()
-        }, this)
+        /** add event */
+        const actions = [server, database, security, autoscaling, monitor, network, storage, event]
+        actions.forEach(service => service.on('pointerup', this.handlerPointerup, this))
+    }
 
-        database.on('pointerup', function () {
-            const database = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
-            // this.commence()
-        }, this)
-
-
-        security.on('pointerup', function () {
-            const security = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
-            // this.commence()
-        }, this)
-
-        autoscaling.on('pointerup', function () {
-            const autoscaling = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
-            // this.commence()
-        }, this)
-
-        monitor.on('pointerup', function () {
-            const monitor = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
-            // this.commence()
-        }, this)
-
-        network.on('pointerup', function () {
-            const network = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
-            // this.commence()
-        }, this)
-
-        storage.on('pointerup', function () {
-            const storage = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
-            // this.commence()
-        }, this)
-
-        event.on('pointerup', function () {
-            const event = this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1).setInteractive()
-            // this.commence()
-        }, this)
-
+    handlerPointerup () {
+        this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1.0).setInteractive()
     }
 }
 
