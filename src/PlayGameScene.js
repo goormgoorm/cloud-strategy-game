@@ -51,10 +51,16 @@ class PlayGameScene extends Phaser.Scene {
         /** add event */
         const actions = [server, database, security, autoscaling, monitor, network, storage, event]
         actions.forEach(service => service.on('pointerup', this.handlePointerup, this))
+
+        this.createTimer()
     }
 
     handlePointerup () {
         this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1.0).setInteractive()
+    }
+
+    createTimer () {
+        console.log(this.time.create)
     }
 }
 
