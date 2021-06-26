@@ -25,7 +25,7 @@ class MainCharacterScene extends Phaser.Scene {
             repeat: -1
         })
         this.add.sprite(150, 250, 'main1').play('face-anims')
-        this.add.text(220, 200, '\n이름을 다시 한번 알려주겠니?', { font: '32px Courier', fill: '#ffffff' })
+        this.add.text(220, 200, '\n우리 친구, 내가 뭐라고 부르면 될까?', { font: '32px Courier', fill: '#ffffff' })
         this.add.sprite(450, 320, 'input').setOrigin(0.5).setScale(0.3)
 
         const textEntry = this.add.text(340, 300, '', { font: '32px Courier', fill: '#000' })

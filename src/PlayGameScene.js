@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { SCENE_PLAY_GAME } from './constant'
+
 class PlayGameScene extends Phaser.Scene {
     constructor () {
         super(SCENE_PLAY_GAME)
@@ -11,6 +12,9 @@ class PlayGameScene extends Phaser.Scene {
         this.load.image('service-task', 'images/service-task.png')
         this.load.image('calender', 'images/calender-2.png')
         this.load.image('score', 'images/score.png')
+        this.load.image('close-button', 'images/close-button.png')
+
+        this.load.json('actions', 'actions.json')
 
         this.load.path = 'images/action/'
         this.load.image('security', 'security.png')
@@ -56,7 +60,15 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     handlePointerup () {
-        this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1.0).setInteractive()
+        const image =  this.add.sprite(0, 0, 'service-task').setOrigin(0.0).setScale(1.0).setInteractive();
+        const close =  this.add.sprite(655, 100, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive();
+        const description = this.cache.json.get('actions')[0].description;
+        const text = this.add.bitmapText(200, 220, 'atari', description).setOrigin(0.5).setScale(0.3);
+        close.on('pointerup', function () {
+            image.destroy();
+            close.destroy();
+            text.destroy();
+        }, this)
     }
 
     createTimer () {
