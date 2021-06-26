@@ -4,6 +4,8 @@ import { MainTitleScene } from './MainTitleScene'
 import { MainCharacterScene } from './MainCharacterScene'
 import { MainPrologScene } from './MainPrologScene'
 import { PlayGameScene } from './PlayGameScene'
+import { GameOverClearScene } from './GameOverClearScene'
+import { GameOverFailScene } from './GameOverFailScene'
 window.addEventListener('load', function () {
     const config = {
         type: Phaser.AUTO,
@@ -15,7 +17,9 @@ window.addEventListener('load', function () {
             MainTitleScene,
             MainCharacterScene,
             MainPrologScene,
-            PlayGameScene
+            PlayGameScene,
+            GameOverClearScene,
+            GameOverFailScene
         ]
     }
 

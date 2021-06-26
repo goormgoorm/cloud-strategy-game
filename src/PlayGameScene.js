@@ -1,5 +1,5 @@
 import Phaser from 'phaser'
-import { SCENE_PLAY_GAME } from './constant'
+import { SCENE_PLAY_GAME, SCENE_GAME_OVER_FAIL } from './constant'
 
 class PlayGameScene extends Phaser.Scene {
     constructor () {
@@ -36,7 +36,7 @@ class PlayGameScene extends Phaser.Scene {
         // calender
         this.add.sprite(540, 210, 'calender').setScale(0.25)
         this.month = this.add.bitmapText(540, 200, 'atari', '').setScale(0.5).setOrigin(0.5).setFontSize(20).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
-        this.day = this.add.bitmapText(540, 230, 'atari', '').setScale(0.5).setOrigin(0.5).setFontSize(40).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
+        this.day = this.add.bitmapText(540, 230, 'atari', '1').setScale(0.5).setOrigin(0.5).setFontSize(40).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
         // left
         const server = this.add.sprite(60, 100, 'server').setOrigin(0.5).setScale(0.08).setInteractive()
         server.name = 'server'
@@ -75,7 +75,9 @@ class PlayGameScene extends Phaser.Scene {
 
     update () {
         this.season = this.cache.json.get('season')[this.seasonIndex]
-        this.month.setText(this.season.name)
+        if (this.season) {
+            this.month.setText(this.season.name)
+        }
     }
 
     onOpenTaskEvent (service) {
@@ -108,8 +110,9 @@ class PlayGameScene extends Phaser.Scene {
         if (this.day.text < this.season.days) {
             this.day.setText(++this.day.text)
         } else {
-            if (this.seasonIndex === 11) {
+            if (this.seasonIndex === 12) {
                 this.timedEvent.remove()
+                this.scene.start(SCENE_GAME_OVER_FAIL)
             }
             this.seasonIndex++
             this.day.setText(1)
