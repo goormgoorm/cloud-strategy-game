@@ -13,6 +13,8 @@ class PlayGameScene extends Phaser.Scene {
         this.load.image('calender', 'images/calender-2.png')
         this.load.image('score', 'images/score.png')
         this.load.image('close-button', 'images/close-button.png')
+        this.load.image('alarm', 'images/alarm.png')
+        this.load.image('alarm-message', 'images/alarm-message.png')
 
         this.load.json('actions', 'actions.json')
         this.load.json('season', 'season.json')
@@ -34,6 +36,9 @@ class PlayGameScene extends Phaser.Scene {
         this.season = this.cache.json.get('season')[this.seasonIndex]
         this.add.sprite(400, 300, 'play-screen')
         this.add.sprite(400, 30, 'score').setScale(0.3)
+
+        const alarm = this.add.sprite(540, 50, 'alarm').setOrigin(0.5).setScale(0.08).setInteractive()
+        alarm.on('pointerup', this.onOpenAlarmEvent.bind(this, alarm), this)
 
         // calender
         this.add.sprite(540, 210, 'calender').setScale(0.25)
@@ -98,9 +103,19 @@ class PlayGameScene extends Phaser.Scene {
         })
     }
 
+    onOpenAlarmEvent (service) {
+        this.timedEvent.paused = true
+        this.image = this.add.sprite(200, 30, 'alarm-message').setOrigin(0.0).setScale(1.3).setInteractive()
+        this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
+        this.taskTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
+
+        this.close.on('pointerup', this.onCloseTaskEvent.bind(this, service), this)
+    }
+
     onCloseTaskEvent (service) {
         this.image.destroy()
         this.close.destroy()
+        this.taskTitle.destroy()
         this.tasks[service.name].forEach(task => task.destroy())
         this.timedEvent.paused = false
     }
