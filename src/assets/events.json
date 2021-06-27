@@ -16,19 +16,23 @@
         ]
     },
     {
-        "title": "Request Internal Security",
-        "description": "내부 보안 정책 강화를 요청합니다",
+        "title": "Access/Secret key leak",
+        "description": "보안감사 결과, 엑세스/시크릿 키 유출이 우려됩니다.",
         "point": 100,
         "defenseActions": [
 
         ]
     },
     {
-        "title": "Request Cost Savings",
+        "title": "Cost Savings",
         "description": "비용 절감을 요청합니다",
         "point": 100,
         "defenseActions": [
 
         ]
+    },
+    {
+        "title": "External Secturity",
+        "description": "외부 보안 정책을 강화 합니다."
     }
 ]

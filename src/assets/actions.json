@@ -1,53 +1,68 @@
 [
     {
         "title": "Change EC2 Type Up",
-        "description": "EC2 인스턴스의 성능을 올린다",
+        "description": "EC2 인스턴스의 성능을 올립니다",
         "point": 10,
-        "service": "server",
-        "events": [
-            ""
-        ]
+        "service": "server"
     },
     {
         "title": "Change EC2 Type Down",
-        "description": "EC2 인스턴스의 성능을 낮춘다",
+        "description": "EC2 인스턴스의 성능을 낮춥니다",
         "point": 10,
-        "service": "server",
-        "events": [
-            ""
-        ]
+        "service": "server"
+    },
+    {
+        "title": "Buy RI",
+        "description": "예약 인스턴스를 구입합니다",
+        "point": 10,
+        "service": "server"
     },
     {
         "title": "Set Strong Security Group",
-        "description": "강력한 보안그룹을 설정한다",
-        "point": 15,
-        "service": "security",
-        "events": [
-            ""
-        ]
+        "description": "보안그룹 정책을 강화합니다",
+        "point": 10,
+        "service": "security"
     },
     {
-        "title": "",
-        "description": "",
-        "service": "database",
-        "events": [
-            ""
-        ]
+        "title": "Don't use root account",
+        "description": "루트 계정을 사용하지 않습니다",
+        "point": 10,
+        "service": "security"
     },
     {
-        "title": "",
-        "description": "",
-        "service": "autoscaling",
-        "events": [
-            ""
-        ]
+        "title": "Create a user-specific IAM",
+        "description": "사용자별 IAM을 생성합니다",
+        "point": 10,
+        "service": "security"
     },
     {
-        "title": "",
-        "description": "",
-        "service": "monitor",
-        "events": [
-            ""
-        ]
+        "title": "Modify the application\nbased on IAM Role",
+        "description": "IAM Role 기반으로 어플리케이션을 수정합니다",
+        "point": 10,
+        "service": "security"
+    },
+    {
+        "title": "Set up autoscaling",
+        "description": "오토스케일링을 설정 합니다.",
+        "point": 10,
+        "service": "autoscaling"
+    },
+    {
+        "title": "I use Multi-AZ",
+        "description": "멀티AZ를 사용합니다",
+        "point": 10,
+        "service": "database"
+    },
+    {
+        "title": "Use a read replica",
+        "description": "읽기 복제본을 사용합니다",
+        "point": 10,
+        "service": "database"
+    },
+    {
+        "title": "Set automatic backup policy",
+        "description": "자동 백업정책을 설정합니다",
+        "point": 10,
+        "service": "database"
     }
 ]
