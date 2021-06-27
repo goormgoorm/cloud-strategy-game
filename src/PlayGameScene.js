@@ -40,10 +40,10 @@ class PlayGameScene extends Phaser.Scene {
         this.add.sprite(400, 30, 'score').setScale(0.3)
 
         const alarm = this.add.sprite(540, 50, 'alarm').setOrigin(0.5).setScale(0.08).setInteractive()
-        alarm.on('pointerup', this.onOpenAlarmEvent.bind(this, alarm), this)
+        alarm.on('pointerup', this.onOpenAlarmEvent, this)
 
         const history = this.add.sprite(260, 50, 'history').setOrigin(0.5).setScale(0.1).setInteractive()
-        history.on('pointerup', this.onOpenHistoryEvent.bind(this, history), this)
+        history.on('pointerup', this.onOpenHistoryEvent, this)
 
         // calender
         this.add.sprite(540, 210, 'calender').setScale(0.25)
@@ -84,6 +84,9 @@ class PlayGameScene extends Phaser.Scene {
 
         this.createTimeEvent()
         this.tasks = {}
+        this.popUpContents = []
+        this.actionHistory = {}
+        this.alarmHistory = {}
     }
 
     update () {
@@ -108,16 +111,38 @@ class PlayGameScene extends Phaser.Scene {
         })
     }
 
-    onOpenAlarmEvent (service) {
+    onCloseTaskEvent (service) {
+        this.image.destroy()
+        this.close.destroy()
+        if (service) {
+            this.tasks[service.name].forEach(task => task.destroy())
+        }
+        this.timedEvent.paused = false
+    }
+
+    onOpenAlarmEvent () {
         this.timedEvent.paused = true
         this.image = this.add.sprite(200, 30, 'alarm-message').setOrigin(0.0).setScale(1.3).setInteractive()
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
-        this.taskTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
-
-        this.close.on('pointerup', this.onCloseTaskEvent.bind(this, service), this)
+        const taskTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
+        const events = ['d','a']
+        events.forEach(value => {
+            this.add.text(350, 150, value, { font: '24px', fill: '#000' })
+        })
+        this.close.on('pointerup', this.onCloseAlarmEvent.bind(this, taskTitle, events), this)
     }
 
-    onOpenHistoryEvent (service) {
+    onCloseAlarmEvent (taskTitle, events) {
+        this.image.destroy()
+        this.close.destroy()
+        taskTitle.destroy()
+        // if (events) {
+        //     events.forEach(event => event.destroy())
+        // }
+        this.timedEvent.paused = false
+    }
+
+    onOpenHistoryEvent () {
         this.timedEvent.paused = true
         this.image = this.add.sprite(200, 30, 'history-message').setOrigin(0.0).setScale(1.3).setInteractive()
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
@@ -141,19 +166,14 @@ class PlayGameScene extends Phaser.Scene {
                 works.y = Phaser.Math.Clamp(works.y, -400, 300);
             }
         });
-        this.close.on('pointerup', this.onCloseTaskEvent.bind(this, service), this)
-
-        this.close.on('pointerup', this.onCloseTaskEvent.bind(this, service), this)
+        this.close.on('pointerup', this.onCloseHistory.bind(this, mask), this)
     }
 
-    onCloseTaskEvent (service) {
+    onCloseHistory (mask) {
         this.image.destroy()
         this.close.destroy()
-        this.works.destroy()
-        this.zone.destroy()
-        this.mask.destroy()
         this.taskTitle.destroy()
-        this.tasks[service.name].forEach(task => task.destroy())
+
         this.timedEvent.paused = false
     }
 
