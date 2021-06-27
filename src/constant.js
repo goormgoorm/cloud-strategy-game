@@ -5,4 +5,6 @@ export const SCENE_MAIN_CHARACTER = 'SCENE_MAIN_CHARACTER'
 export const SCENE_PLAY_GAME = 'SCENE_PLAY_GAME'
 export const SCENE_GAME_OVER_FAIL = 'SCENE_GAME_OVER_FAIL'
 export const SCENE_GAME_OVER_CLEAR = 'SCENE_GAME_OVER_CLEAR'
-/** */
+/** Game Component */
+export const RANDOM_EVENT = 'RANDOM_EVENT'
+export const TIME_EVENT = 'TIME_EVENT'

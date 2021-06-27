@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
-import { SCENE_PLAY_GAME, SCENE_GAME_OVER_FAIL } from './constant'
-
+import { SCENE_PLAY_GAME } from './constant'
+import { RandomEvent } from './RandomEvent'
+import { Calender } from './Calender'
 class PlayGameScene extends Phaser.Scene {
     constructor () {
         super(SCENE_PLAY_GAME)
@@ -10,7 +11,6 @@ class PlayGameScene extends Phaser.Scene {
         this.load.bitmapFont('atari', 'fonts/atari-classic.png', './fonts/atari-classic.xml')
         this.load.image('play-screen', 'images/play-screen.png')
         this.load.image('service-task', 'images/service-task.png')
-        this.load.image('calender', 'images/calender-2.png')
         this.load.image('score', 'images/score.png')
         this.load.image('close-button', 'images/close-button.png')
         this.load.image('alarm', 'images/alarm.png')
@@ -19,7 +19,6 @@ class PlayGameScene extends Phaser.Scene {
         this.load.image('history-message', 'images/history-message.png')
 
         this.load.json('actions', 'actions.json')
-        this.load.json('season', 'season.json')
         this.load.path = 'images/action/'
         this.load.image('storage', 'storage.png')
         this.load.image('monitor', 'monitor.png')
@@ -32,10 +31,6 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     create () {
-        const year = 2021
-        this.seasonIndex = 0
-        this.startDay = 1
-        this.season = this.cache.json.get('season')[this.seasonIndex]
         this.add.sprite(400, 300, 'play-screen')
         this.add.sprite(400, 30, 'score').setScale(0.3)
 
@@ -46,10 +41,8 @@ class PlayGameScene extends Phaser.Scene {
         history.on('pointerup', this.onOpenHistoryEvent, this)
 
         // calender
-        this.add.sprite(540, 210, 'calender').setScale(0.25)
-        this.add.bitmapText(540, 175, 'atari', year).setScale(0.5).setOrigin(0.5).setFontSize(18)
-        this.month = this.add.bitmapText(540, 200, 'atari', '').setScale(0.5).setOrigin(0.5).setFontSize(25).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
-        this.day = this.add.bitmapText(540, 230, 'atari', this.startDay).setScale(0.5).setOrigin(0.5).setFontSize(40).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
+        this.calenderEvent = this.scene.add('calender-event', Calender, true)
+
         // left
         const server = this.add.sprite(60, 100, 'server').setOrigin(0.5).setScale(0.08).setInteractive()
         server.name = 'server'
@@ -82,23 +75,19 @@ class PlayGameScene extends Phaser.Scene {
         const actions = [server, database, security, autoscaling, monitor, network, storage, event]
         actions.forEach(service => service.on('pointerup', this.onOpenTaskEvent.bind(this, service), this))
 
-        this.createTimeEvent()
         this.tasks = {}
         this.popUpContents = []
         this.actionHistory = {}
         this.alarmHistory = {}
-    }
 
-    update () {
-        this.season = this.cache.json.get('season')[this.seasonIndex]
-        if (this.season) {
-            this.month.setText(this.season.name)
-        }
+        this.randomEvent = new RandomEvent()
+        this.randomEvent.random()
+        console.log(this)
     }
 
     /** Task Modal */
     onOpenTaskEvent (service) {
-        this.timedEvent.paused = true
+        this.calenderEvent.pause()
         this.image = this.add.sprite(400, 300, 'service-task')
         this.close = this.add.sprite(645, 100, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.close.on('pointerup', this.onCloseTaskEvent.bind(this, service), this)
@@ -116,12 +105,12 @@ class PlayGameScene extends Phaser.Scene {
         this.close.destroy()
         this.taskTitle.destroy()
         this.tasks[service.name].forEach(task => task.destroy())
-        this.timedEvent.paused = false
+        this.calenderEvent.start()
     }
 
     /** Alarm Modal */
     onOpenAlarmEvent () {
-        this.timedEvent.paused = true
+        this.calenderEvent.pause()
         this.image = this.add.sprite(200, 30, 'alarm-message').setOrigin(0.0).setScale(1.3).setInteractive()
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.alarmTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
@@ -141,12 +130,12 @@ class PlayGameScene extends Phaser.Scene {
         this.alarmContents.forEach(alarm => {
             alarm.destroy()
         })
-        this.timedEvent.paused = false
+        this.calenderEvent.start()
     }
 
     /** History Modal */
     onOpenHistoryEvent () {
-        this.timedEvent.paused = true
+        this.calenderEvent.pause()
         this.image = this.add.sprite(200, 30, 'history-message').setOrigin(0.0).setScale(1.3).setInteractive()
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.taskTitle = this.add.text(280, 95, 'YOUR WORK HISTORY', { font: '24px', fill: '#000' })
@@ -175,27 +164,7 @@ class PlayGameScene extends Phaser.Scene {
         this.image.destroy()
         this.close.destroy()
         this.taskTitle.destroy()
-        this.timedEvent.paused = false
-    }
-
-    /** TimeEvent */
-    createTimeEvent () {
-        this.timedEvent = this.time.addEvent({ delay: 365, callback: this.onTimeEvent, callbackScope: this, loop: true })
-    }
-
-    onTimeEvent () {
-        if (this.day.text < this.season.days) {
-            this.day.setText(++this.day.text)
-        } else {
-            this.seasonIndex++
-            if (this.seasonIndex === 12) {
-                this.timedEvent.remove()
-                this.game.sound.destroy()
-                this.scene.start(SCENE_GAME_OVER_FAIL)
-            } else {
-                this.day.setText(1)
-            }
-        }
+        this.calenderEvent.start()
     }
 }
 
