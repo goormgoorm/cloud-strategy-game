@@ -101,12 +101,12 @@ class PlayGameScene extends Phaser.Scene {
         this.image = this.add.sprite(400, 300, 'service-task')
         this.close = this.add.sprite(645, 100, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.close.on('pointerup', this.onCloseTaskEvent.bind(this, service), this)
-
+        this.taskTitle = this.add.text(150, 110, service.name, { font: '24px', fill: '#000' })
         this.tasks[service.name] = []
         const data = this.cache.json.get('actions').filter(item => item.service === service.name)
         data.forEach((action, index) => {
             // console.log(action.description)
-            const text = this.add.bitmapText(150, 220 + (index * 20), 'atari', action.title).setScale(0.3)
+            const text = this.add.bitmapText(150, 200 + (index * 20), 'atari', action.title).setScale(0.3)
             this.tasks[service.name].push(text)
         })
     }
