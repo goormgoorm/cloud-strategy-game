@@ -123,12 +123,35 @@ class PlayGameScene extends Phaser.Scene {
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.taskTitle = this.add.text(280, 95, 'YOUR WORK HISTORY', { font: '24px', fill: '#000' })
 
+        // graphics.fillStyle(0xffffff);
+        const graphics = this.make.graphics();
+        graphics.fillRect(230, 150, 380, 320);
+
+        const mask = new Phaser.Display.Masks.GeometryMask(this, graphics);
+        const works = this.add.text(250, 160, ' ec \n\n ec \n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec ',
+            { fontFamily: 'atari', color: '#000000', wordWrap: { width: 310 } }).setOrigin(0);
+        works.setMask(mask);
+
+        //  The rectangle they can 'drag' within
+        const zone = this.add.zone(200, 150, 500, 500).setOrigin(0).setInteractive();
+        zone.on('pointermove', function (pointer) {
+            if (pointer.isDown)
+            {
+                works.y += (pointer.velocity.y / 10);
+                works.y = Phaser.Math.Clamp(works.y, -400, 300);
+            }
+        });
+        this.close.on('pointerup', this.onCloseTaskEvent.bind(this, service), this)
+
         this.close.on('pointerup', this.onCloseTaskEvent.bind(this, service), this)
     }
 
     onCloseTaskEvent (service) {
         this.image.destroy()
         this.close.destroy()
+        this.works.destroy()
+        this.zone.destroy()
+        this.mask.destroy()
         this.taskTitle.destroy()
         this.tasks[service.name].forEach(task => task.destroy())
         this.timedEvent.paused = false
