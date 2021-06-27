@@ -75,5 +75,12 @@
         "description": "자동 백업정책을 설정합니다",
         "point": 10,
         "service": "database"
+    },
+    {
+        "id": 12,
+        "title": "Configure Private/Public Subnet in VPC",
+        "description": "VPC에서 Private/Public 서브넷을 구성합니다",
+        "point": 10,
+        "service": "network"
     }
 ]
