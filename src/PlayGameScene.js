@@ -17,6 +17,8 @@ class PlayGameScene extends Phaser.Scene {
         this.load.image('alarm-message', 'images/alarm-message.png')
         this.load.image('history', 'images/history.png')
         this.load.image('history-message', 'images/history-message.png')
+        this.load.image('check-box', 'images/check-box.png')
+        this.load.image('checked-box', 'images/history-message.png')
 
         this.load.json('actions', 'actions.json')
         this.load.json('season', 'season.json')
@@ -84,8 +86,7 @@ class PlayGameScene extends Phaser.Scene {
 
         this.createTimeEvent()
         this.tasks = {}
-        this.popUpContents = []
-        this.actionHistory = {}
+        this.actionHistory = []
         this.alarmHistory = {}
     }
 
@@ -106,9 +107,17 @@ class PlayGameScene extends Phaser.Scene {
         const data = this.cache.json.get('actions').filter(item => item.service === service.name)
         data.forEach((action, index) => {
             // console.log(action.description)
-            const text = this.add.bitmapText(150, 200 + (index * 20), 'atari', action.title).setScale(0.3)
-            this.tasks[service.name].push(text)
+            const checkBox = this.add.sprite(115, 200 + (index * 40), 'check-box').setOrigin(0.0).setScale(0.15).setInteractive()
+            const item = this.add.bitmapText(150, 200 + (index * 40), 'atari', action.title).setScale(0.3)
+            checkBox.on('pointerup', this.addActionHistoryEvent.bind(this, item, checkBox, index), this)
+            this.tasks[service.name].push(item)
         })
+    }
+
+    addActionHistoryEvent (item, checkBox, index) {
+        checkBox = this.add.sprite(115, 200 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
+        this.actionHistory.push(item)
+        this.actionHistory.forEach(value => {console.log(value)})
     }
 
     onCloseTaskEvent (service) {
