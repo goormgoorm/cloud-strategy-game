@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import { SCENE_PLAY_GAME } from './constant'
 import { RandomEvent } from './RandomEvent'
+import { PointEvent } from './PointEvent'
 import { Calender } from './Calender'
 class PlayGameScene extends Phaser.Scene {
     constructor () {
@@ -39,6 +40,8 @@ class PlayGameScene extends Phaser.Scene {
         const alarm = this.add.sprite(540, 50, 'alarm').setOrigin(0.5).setScale(0.08).setInteractive()
         alarm.on('pointerup', this.onOpenAlarmEvent, this)
 
+        // history
+        this.pointEvent = this.scene.add('point-event', PointEvent, true)
         const history = this.add.sprite(260, 50, 'history').setOrigin(0.5).setScale(0.1).setInteractive()
         history.on('pointerup', this.onOpenHistoryEvent, this)
 
@@ -98,19 +101,19 @@ class PlayGameScene extends Phaser.Scene {
         const data = this.cache.json.get('actions').filter(item => item.service === service.name)
         data.forEach((action, index) => {
             // console.log(action.description)
-        const checkBox = this.add.sprite(115, 200 + (index * 40), 'check-box').setOrigin(0.0).setScale(0.15).setInteractive()
-        const item = this.add.bitmapText(150, 200 + (index * 40), 'atari', action.title).setScale(0.3)
-        checkBox.on('pointerup', this.addActionHistoryEvent.bind(this, item, checkBox, index), this)
-        this.tasks[service.name].push(item)
-        const text = this.add.bitmapText(150, 200 + (index * 20), 'atari', action.title).setScale(0.3)
-        this.tasks[service.name].push(text)
+            const checkBox = this.add.sprite(115, 200 + (index * 40), 'check-box').setOrigin(0.0).setScale(0.15).setInteractive()
+            const item = this.add.bitmapText(150, 200 + (index * 40), 'atari', action.title).setScale(0.3)
+            checkBox.on('pointerup', this.addActionHistoryEvent.bind(this, item, checkBox, index), this)
+            this.tasks[service.name].push(item)
+            const text = this.add.bitmapText(150, 200 + (index * 20), 'atari', action.title).setScale(0.3)
+            this.tasks[service.name].push(text)
         })
     }
 
     addActionHistoryEvent (item, checkBox, index) {
         checkBox = this.add.sprite(115, 200 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
         this.actionHistory.push(item)
-        this.actionHistory.forEach(value => {console.log(value)})
+        this.actionHistory.forEach(value => { console.log(value) })
     }
 
     onCloseTaskEvent (service) {
@@ -150,7 +153,7 @@ class PlayGameScene extends Phaser.Scene {
         this.calenderEvent.start()
     }
 
-    /** History Modal */
+    // /** History Modal */
     onOpenHistoryEvent () {
         if (this.openModal) return
         this.openModal = true
@@ -159,28 +162,15 @@ class PlayGameScene extends Phaser.Scene {
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.taskTitle = this.add.text(280, 95, 'YOUR WORK HISTORY', { font: '24px', fill: '#000' })
 
+        this.pointEvent.display()
         // graphics.fillStyle(0xffffff);
-        const graphics = this.make.graphics()
-        graphics.fillRect(230, 150, 380, 320)
 
-        const mask = new Phaser.Display.Masks.GeometryMask(this, graphics)
-        const works = this.add.text(250, 160, ' ec \n\n ec \n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec ',
-            { fontFamily: 'atari', color: '#000000', wordWrap: { width: 310 } }).setOrigin(0)
-        works.setMask(mask)
-
-        //  The rectangle they can 'drag' within
-        const zone = this.add.zone(200, 150, 500, 500).setOrigin(0).setInteractive()
-        zone.on('pointermove', function (pointer) {
-            if (pointer.isDown) {
-                works.y += (pointer.velocity.y / 10)
-                works.y = Phaser.Math.Clamp(works.y, -400, 300)
-            }
-        })
-        this.close.on('pointerup', this.onCloseHistory.bind(this, mask), this)
+        this.close.on('pointerup', this.onCloseHistory, this)
     }
 
-    onCloseHistory (mask) {
+    onCloseHistory () {
         this.openModal = false
+        this.pointEvent.hide()
         this.image.destroy()
         this.close.destroy()
         this.taskTitle.destroy()

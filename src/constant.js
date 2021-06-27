@@ -8,3 +8,4 @@ export const SCENE_GAME_OVER_CLEAR = 'SCENE_GAME_OVER_CLEAR'
 /** Game Component */
 export const RANDOM_EVENT = 'RANDOM_EVENT'
 export const TIME_EVENT = 'TIME_EVENT'
+export const POINT_EVENT = 'POINT_EVENT'
