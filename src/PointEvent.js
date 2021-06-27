@@ -5,6 +5,8 @@ class PointEvent extends Phaser.Scene {
     constructor () {
         super(POINT_EVENT)
         this.point = 100
+        this.actions = []
+        this.alarms = []
     }
 
     preload () {
@@ -25,6 +27,10 @@ class PointEvent extends Phaser.Scene {
             { fontFamily: 'atari', color: '#000000', wordWrap: { width: 310 } }).setOrigin(0)
         works.setMask(mask)
 
+        // test
+        console.log(this.actions)
+        console.log(this.alarms)
+
         //  The rectangle they can 'drag' within
         const zone = this.add.zone(200, 150, 500, 500).setOrigin(0).setInteractive()
         zone.on('pointermove', function (pointer) {
@@ -34,6 +40,14 @@ class PointEvent extends Phaser.Scene {
             }
         })
         this.g.add(works)
+    }
+
+    setActions (actions) {
+        this.actions = actions
+    }
+
+    setAlarms (alarms) {
+        this.alarms = alarms
     }
 
     hide () {

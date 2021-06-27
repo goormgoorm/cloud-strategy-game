@@ -85,7 +85,7 @@ class PlayGameScene extends Phaser.Scene {
         this.openModal = false
         this.tasks = {}
         this.actionHistory = []
-        this.alarmHistory = {}
+        this.alarmHistory = []
     }
 
     /** Task Modal */
@@ -112,7 +112,7 @@ class PlayGameScene extends Phaser.Scene {
 
     addActionHistoryEvent (item, checkBox, index) {
         checkBox = this.add.sprite(115, 200 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
-        this.actionHistory.push(item)
+        this.pointEvent.push(item)
         this.actionHistory.forEach(value => { console.log(value) })
     }
 
