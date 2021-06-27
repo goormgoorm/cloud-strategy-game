@@ -43,6 +43,9 @@ class PlayGameScene extends Phaser.Scene {
         // calender
         this.calenderEvent = this.scene.add('calender-event', Calender, true)
 
+        // random event
+        this.randomEvent = this.scene.add('random-event', RandomEvent, true)
+
         // left
         const server = this.add.sprite(60, 100, 'server').setOrigin(0.5).setScale(0.08).setInteractive()
         server.name = 'server'
@@ -74,19 +77,17 @@ class PlayGameScene extends Phaser.Scene {
         /** add event */
         const actions = [server, database, security, autoscaling, monitor, network, storage, event]
         actions.forEach(service => service.on('pointerup', this.onOpenTaskEvent.bind(this, service), this))
-
+        this.openModal = false
         this.tasks = {}
         this.popUpContents = []
         this.actionHistory = {}
         this.alarmHistory = {}
-
-        this.randomEvent = new RandomEvent()
-        this.randomEvent.random()
-        console.log(this)
     }
 
     /** Task Modal */
     onOpenTaskEvent (service) {
+        if (this.openModal) return
+        this.openModal = true
         this.calenderEvent.pause()
         this.image = this.add.sprite(400, 300, 'service-task')
         this.close = this.add.sprite(645, 100, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
@@ -101,6 +102,7 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     onCloseTaskEvent (service) {
+        this.openModal = false
         this.image.destroy()
         this.close.destroy()
         this.taskTitle.destroy()
@@ -110,6 +112,8 @@ class PlayGameScene extends Phaser.Scene {
 
     /** Alarm Modal */
     onOpenAlarmEvent () {
+        if (this.openModal) return
+        this.openModal = true
         this.calenderEvent.pause()
         this.image = this.add.sprite(200, 30, 'alarm-message').setOrigin(0.0).setScale(1.3).setInteractive()
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
@@ -124,6 +128,7 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     onCloseAlarmEvent () {
+        this.openModal = false
         this.image.destroy()
         this.close.destroy()
         this.alarmTitle.destroy()
@@ -135,6 +140,8 @@ class PlayGameScene extends Phaser.Scene {
 
     /** History Modal */
     onOpenHistoryEvent () {
+        if (this.openModal) return
+        this.openModal = true
         this.calenderEvent.pause()
         this.image = this.add.sprite(200, 30, 'history-message').setOrigin(0.0).setScale(1.3).setInteractive()
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
@@ -161,6 +168,7 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     onCloseHistory (mask) {
+        this.openModal = false
         this.image.destroy()
         this.close.destroy()
         this.taskTitle.destroy()
