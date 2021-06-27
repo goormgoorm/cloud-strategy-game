@@ -84,6 +84,9 @@ class PlayGameScene extends Phaser.Scene {
 
         this.createTimeEvent()
         this.tasks = {}
+        this.popUpContents = []
+        this.actionHistory = {}
+        this.alarmHistory = {}
     }
 
     update () {
@@ -108,13 +111,35 @@ class PlayGameScene extends Phaser.Scene {
         })
     }
 
+    onCloseTaskEvent (service) {
+        this.image.destroy()
+        this.close.destroy()
+        if (service) {
+            this.tasks[service.name].forEach(task => task.destroy())
+        }
+        this.timedEvent.paused = false
+    }
+
     onOpenAlarmEvent () {
         this.timedEvent.paused = true
         this.image = this.add.sprite(200, 30, 'alarm-message').setOrigin(0.0).setScale(1.3).setInteractive()
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
-        this.taskTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
+        const taskTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
+        const events = ['d','a']
+        events.forEach(value => {
+            this.add.text(350, 150, value, { font: '24px', fill: '#000' })
+        })
+        this.close.on('pointerup', this.onCloseAlarmEvent.bind(this, taskTitle, events), this)
+    }
 
-        this.close.on('pointerup', this.onCloseTaskEvent.bind(this, null), this)
+    onCloseAlarmEvent (taskTitle, events) {
+        this.image.destroy()
+        this.close.destroy()
+        taskTitle.destroy()
+        // if (events) {
+        //     events.forEach(event => event.destroy())
+        // }
+        this.timedEvent.paused = false
     }
 
     onOpenHistoryEvent () {
@@ -123,16 +148,32 @@ class PlayGameScene extends Phaser.Scene {
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.taskTitle = this.add.text(280, 95, 'YOUR WORK HISTORY', { font: '24px', fill: '#000' })
 
-        this.close.on('pointerup', this.onCloseTaskEvent.bind(this, null), this)
+        // graphics.fillStyle(0xffffff);
+        const graphics = this.make.graphics();
+        graphics.fillRect(230, 150, 380, 320);
+
+        const mask = new Phaser.Display.Masks.GeometryMask(this, graphics);
+        const works = this.add.text(250, 160, ' ec \n\n ec \n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec ',
+            { fontFamily: 'atari', color: '#000000', wordWrap: { width: 310 } }).setOrigin(0);
+        works.setMask(mask);
+
+        //  The rectangle they can 'drag' within
+        const zone = this.add.zone(200, 150, 500, 500).setOrigin(0).setInteractive();
+        zone.on('pointermove', function (pointer) {
+            if (pointer.isDown)
+            {
+                works.y += (pointer.velocity.y / 10);
+                works.y = Phaser.Math.Clamp(works.y, -400, 300);
+            }
+        });
+        this.close.on('pointerup', this.onCloseHistory.bind(this, mask), this)
     }
 
-    onCloseTaskEvent (service) {
+    onCloseHistory (mask) {
         this.image.destroy()
         this.close.destroy()
         this.taskTitle.destroy()
-        if (service) {
-            this.tasks[service.name].forEach(task => task.destroy())
-        }
+
         this.timedEvent.paused = false
     }
 
