@@ -15,7 +15,9 @@ class PlayGameScene extends Phaser.Scene {
     preload () {
         this.load.bitmapFont('atari', 'fonts/atari-classic.png', './fonts/atari-classic.xml')
         this.load.bitmapFont('visitor', 'fonts/visitor2.png', './fonts/visitor2.xml')
-
+        this.load.audio('double-click', 'sounds/mixkit-fast-double-click-on-mouse-275.wav')
+        this.load.audio('error-sound', 'sounds/mixkit-click-error-1110.wav')
+        this.load.audio('point-sound', 'sounds/mixkit-video-game-mystery-alert-234.wav')
         // this.load.image('play-screen', 'images/play-screen.png')
         this.load.image('service-task', 'images/service-task.png')
         this.load.image('score', 'images/score.png')
@@ -29,6 +31,7 @@ class PlayGameScene extends Phaser.Scene {
         this.load.image('working1', 'images/working1.png')
         this.load.image('working2', 'images/working2.png')
         this.load.image('button-white', 'images/plain-box.png')
+        this.load.image('alert-pop-up', 'images/alertpopup.png')
 
         this.load.json('actions', 'actions.json')
         this.load.path = 'images/action/'
@@ -121,6 +124,9 @@ class PlayGameScene extends Phaser.Scene {
 
     /** Task Modal */
     onOpenTaskEvent (service) {
+        const music = this.sound.add('double-click')
+        music.play()
+
         if (this.openModal) return
 
         this.openModal = true
@@ -150,8 +156,6 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     addActionHistoryEvent (item, index) {
-        this.checkedBox = this.add.sprite(113, 196.5 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
-
         const actionJson = this.cache.json.get('actions')
         const checkedAction = actionJson.filter(element => element.title === item.text)
 
@@ -161,8 +165,38 @@ class PlayGameScene extends Phaser.Scene {
         this.pointEvent.setActionItems(this.checkedActions)
         this.pointEvent.setActions(this.actionHistory)
 
-        this.point.destroy()
-        this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.calculate()).setOrigin(0.5).setScale(0.6)
+        const calculatedPoint = this.pointEvent.calculate()
+
+        if (calculatedPoint < 80) {
+            const music = this.sound.add('error-sound')
+            music.play()
+
+            console.log('cannot be under minust point')
+            this.checkedActions.pop()
+            this.actionHistory.pop()
+            this.pointEvent.setActionItems(this.checkedActions)
+            this.pointEvent.setActions(this.actionHistory)
+
+            this.alert = this.add.sprite(400, 300, 'alert-pop-up').setScale(0.3)
+            this.alertClose = this.add.sprite(530, 230, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
+            this.alertMessage = this.add.bitmapText(395, 300, 'atari', 'YOU HAVE NO POINTS').setOrigin(0.5).setScale(0.25)
+
+            this.alertClose.on('pointerup', this.onCloseAlert.bind(this), this)
+        } else {
+            const music = this.sound.add('point-sound')
+            music.play()
+            this.checkedBox = this.add.sprite(113, 196.5 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
+            this.point.destroy()
+            this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.calculate()).setOrigin(0.5).setScale(0.6)
+        }
+    }
+
+    onCloseAlert () {
+        console.log('ddd')
+        this.alert.destroy()
+        this.alertClose.destroy()
+        this.alertMessage.destroy()
+        // this.calenderEvent.start()
     }
 
     onCloseTaskEvent (service) {
@@ -176,6 +210,9 @@ class PlayGameScene extends Phaser.Scene {
 
     /** Alarm Modal */
     onOpenAlarmEvent () {
+        const music = this.sound.add('double-click')
+        music.play()
+
         if (this.openModal) return
         this.openModal = true
         this.calenderEvent.pause()
@@ -200,6 +237,9 @@ class PlayGameScene extends Phaser.Scene {
 
     /** History Modal */
     onOpenHistoryEvent () {
+        const music = this.sound.add('double-click')
+        music.play()
+
         if (this.openModal) return
         this.openModal = true
         this.calenderEvent.pause()
