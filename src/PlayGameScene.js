@@ -4,6 +4,7 @@ import { RandomEvent } from './RandomEvent'
 import { PointEvent } from './PointEvent'
 import { Calender } from './Calender'
 class PlayGameScene extends Phaser.Scene {
+
     constructor () {
         super(SCENE_PLAY_GAME)
     }
@@ -19,7 +20,7 @@ class PlayGameScene extends Phaser.Scene {
         this.load.image('history', 'images/history.png')
         this.load.image('history-message', 'images/history-message.png')
         this.load.image('check-box', 'images/check-box.png')
-        this.load.image('checked-box', 'images/history-message.png')
+        this.load.image('checked-box', 'images/checked-box.png')
 
         this.load.json('actions', 'actions.json')
         this.load.path = 'images/action/'
@@ -99,25 +100,30 @@ class PlayGameScene extends Phaser.Scene {
         this.calenderEvent.pause()
         this.image = this.add.sprite(400, 300, 'service-task')
         this.close = this.add.sprite(645, 100, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
-        this.close.on('pointerup', this.onCloseTaskEvent.bind(this, service), this)
         this.taskTitle = this.add.text(150, 110, service.name, { font: '24px', fill: '#000' })
         this.tasks[service.name] = []
         const data = this.cache.json.get('actions').filter(item => item.service === service.name)
         data.forEach((action, index) => {
-            // console.log(action.description)
-            const checkBox = this.add.sprite(115, 200 + (index * 40), 'check-box').setOrigin(0.0).setScale(0.15).setInteractive()
             const item = this.add.bitmapText(150, 200 + (index * 40), 'atari', action.title).setScale(0.3)
-            checkBox.on('pointerup', this.addActionHistoryEvent.bind(this, item, checkBox, index), this)
+            const found = this.actionHistory.find(element => element > 10)
+            const checkedAction = this.actionHistory.find(element => element == action.title)
+            if (checkedAction != null) {
+                const checkedBox = this.add.sprite(115, 200 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
+            } else {
+                const checkBox = this.add.sprite(115, 200 + (index * 40), 'check-box').setOrigin(0.0).setScale(0.15).setInteractive()
+                checkBox.on('pointerup', this.addActionHistoryEvent.bind(this, item, checkBox, index), this)
+            }
             this.tasks[service.name].push(item)
-            const text = this.add.bitmapText(150, 200 + (index * 20), 'atari', action.title).setScale(0.3)
-            this.tasks[service.name].push(text)
         })
+
+        this.close.on('pointerup', this.onCloseTaskEvent.bind(this, service), this)
     }
 
     addActionHistoryEvent (item, checkBox, index) {
-        checkBox = this.add.sprite(115, 200 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
-        this.pointEvent.push(item)
-        this.actionHistory.forEach(value => { console.log(value) })
+        this.checkedBox = this.add.sprite(113, 196.5 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
+        this.actionHistory.push(item['text'])
+        this.pointEvent.setActions(this.actionHistory)
+        // this.pointEvent.push(item['text'])
     }
 
     onCloseTaskEvent (service) {
@@ -153,7 +159,7 @@ class PlayGameScene extends Phaser.Scene {
         this.calenderEvent.start()
     }
 
-    // /** History Modal */
+    /** History Modal */
     onOpenHistoryEvent () {
         if (this.openModal) return
         this.openModal = true

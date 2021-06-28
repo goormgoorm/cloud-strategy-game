@@ -7,6 +7,7 @@ class PointEvent extends Phaser.Scene {
         this.point = 100
         this.actions = []
         this.alarms = []
+        // this.actionHistory = []
     }
 
     preload () {
@@ -19,12 +20,14 @@ class PointEvent extends Phaser.Scene {
     }
 
     display () {
+        // console.log('clicekd')
+        // console.log(actionHistory)
         const graphics = this.make.graphics()
         graphics.fillRect(230, 150, 380, 320)
 
         const mask = new Phaser.Display.Masks.GeometryMask(this, graphics)
-        const works = this.add.text(250, 160, ' ec \n\n ec \n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec\n\n ec ',
-            { fontFamily: 'atari', color: '#000000', wordWrap: { width: 310 } }).setOrigin(0)
+        const works = this.add.text(250, 160, this.actions,
+            { fontFamily: 'atari', color: '#000000', wordWrap: { width: 310 } }).setOrigin(0).setScale(1.3)
         works.setMask(mask)
 
         // test
