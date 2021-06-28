@@ -59,7 +59,6 @@ class PlayGameScene extends Phaser.Scene {
 
         this.add.sprite(30, 20, 'button-white').setOrigin(0).setScale(0.09).setInteractive()
         this.add.bitmapText(40, 36, 'visitor', this.playerName).setOrigin(0).setScale(0.14)
-
         this.add.sprite(280, 300, 'working1').play('working').setScale(0.28)
 
         // this.add.sprite(400, 300, 'play-screen')
@@ -79,6 +78,7 @@ class PlayGameScene extends Phaser.Scene {
         // random event
         this.randomEvent = this.scene.add('random-event', RandomEvent, true)
         this.eventIndex = 0
+
         // left
         const server = this.add.sprite(60, 100, 'server').setOrigin(0.5).setScale(0.08).setInteractive()
         server.name = 'server'
@@ -106,16 +106,18 @@ class PlayGameScene extends Phaser.Scene {
         const event = this.add.sprite(750, 400, 'event').setOrigin(0.5).setScale(0.08).setInteractive()
         event.name = 'event'
         this.add.bitmapText(750, 440, 'atari', 'EVENT').setOrigin(0.5).setScale(0.17)
-
         this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.point).setOrigin(0.5).setScale(0.6)
+
         /** add event */
         const actions = [server, database, security, autoscaling, monitor, network, storage, event]
         actions.forEach(service => service.on('pointerup', this.onOpenTaskEvent.bind(this, service), this))
+        this.actions = this.cache.json.get('actions')
+        this.alertFlag = false
         this.openModal = false
         this.tasks = {}
-        this.actionHistory = []
         this.alarmHistory = []
-        this.checkedActions = []
+        this.actionHistory = []
+        this.checkedBox = []
     }
 
     update () {
@@ -134,84 +136,68 @@ class PlayGameScene extends Phaser.Scene {
     onOpenTaskEvent (service) {
         const music = this.sound.add('double-click')
         music.play()
-
         if (this.openModal) return
-
         this.openModal = true
         this.calenderEvent.pause()
         this.image = this.add.sprite(400, 300, 'service-task')
         this.close = this.add.sprite(645, 100, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.taskTitle = this.add.text(150, 110, service.name, { font: '24px', fill: '#000' })
         this.tasks[service.name] = []
-
-        const data = this.cache.json.get('actions').filter(item => item.service === service.name)
-
-        data.forEach((action, index) => {
-            const item = this.add.bitmapText(150, 200 + (index * 40), 'atari', action.title).setScale(0.3)
-            const found = this.actionHistory.find(element => element > 10)
-            const checkedAction = this.actionHistory.find(element => element === action.title)
-
-            if (checkedAction != null) {
-                const checkedBox = this.add.sprite(115, 200 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
-            } else {
-                const checkBox = this.add.sprite(115, 200 + (index * 40), 'check-box').setOrigin(0.0).setScale(0.15).setInteractive()
-                checkBox.on('pointerup', this.addActionHistoryEvent.bind(this, item, index), this)
-            }
-            this.tasks[service.name].push(item)
+        this.actions.filter(item => item.service === service.name).forEach((action, index) => {
+            const checked = this.actionHistory.find(item => item.id === action.id)
+            const actionTitle = this.add.bitmapText(150, 200 + (index * 40), 'atari', action.title).setScale(0.3)
+            const checkbox = this.add.sprite(115, 200 + (index * 40), checked ? 'checked-box' : 'check-box').setOrigin(0.0).setScale(0.15).setInteractive()
+            if (!checked) checkbox.on('pointerup', this.addActionHistoryEvent.bind(this, action, index), this)
+            this.checkedBox.push(checkbox)
+            this.tasks[service.name].push(actionTitle)
         })
 
         this.close.on('pointerup', this.onCloseTaskEvent.bind(this, service), this)
     }
 
-    addActionHistoryEvent (item, index) {
-        const actionJson = this.cache.json.get('actions')
-        const checkedAction = actionJson.filter(element => element.title === item.text)
-
-        this.checkedActions.push(checkedAction[0])
-        this.actionHistory.push(item.text)
-
-        this.pointEvent.setActionItems(this.checkedActions)
+    addActionHistoryEvent (action, index) {
+        this.actionHistory.push(action)
+        this.pointEvent.setActionItems(this.actionHistory)
 
         const calculatedPoint = this.pointEvent.calculate()
 
-        if (calculatedPoint < 80) {
+        if (calculatedPoint < 50) {
             const music = this.sound.add('error-sound')
             music.play()
-
-            console.log('cannot be under minust point')
-            this.checkedActions.pop()
+            this.pointEvent.setActionItems(this.actionHistory)
             this.actionHistory.pop()
-            this.pointEvent.setActionItems(this.checkedActions)
-            this.pointEvent.setActions(this.actionHistory)
-
-            this.alert = this.add.sprite(400, 300, 'alert-pop-up').setScale(0.3)
-            this.alertClose = this.add.sprite(530, 230, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
-            this.alertMessage = this.add.bitmapText(395, 300, 'atari', 'YOU HAVE NO POINTS').setOrigin(0.5).setScale(0.25)
-
-            this.alertClose.on('pointerup', this.onCloseAlert.bind(this), this)
+            if (!this.alertFlag) {
+                this.alert = this.add.sprite(400, 300, 'alert-pop-up').setScale(0.3)
+                this.alertMessage = this.add.bitmapText(395, 300, 'atari', 'YOU HAVE NO POINTS').setOrigin(0.5).setScale(0.25)
+                this.alertClose = this.add.sprite(530, 230, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
+                this.alertClose.on('pointerup', this.onCloseAlert.bind(this), this)
+                this.alertFlag = true
+            }
         } else {
             const music = this.sound.add('point-sound')
             music.play()
-            this.checkedBox = this.add.sprite(113, 196.5 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
+            this.checkedBox[index].destroy()
+            this.checkedBox[index] = this.add.sprite(113, 196.5 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
             this.point.destroy()
             this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.calculate()).setOrigin(0.5).setScale(0.6)
         }
     }
 
     onCloseAlert () {
-        console.log('ddd')
         this.alert.destroy()
         this.alertClose.destroy()
         this.alertMessage.destroy()
-        // this.calenderEvent.start()
+        this.alertFlag = false
     }
 
     onCloseTaskEvent (service) {
+        if (this.alertFlag) return
         this.openModal = false
         this.image.destroy()
         this.close.destroy()
         this.taskTitle.destroy()
         this.tasks[service.name].forEach(task => task.destroy())
+        this.checkedBox.forEach(child => child.destroy())
         this.calenderEvent.start()
     }
 
@@ -219,7 +205,6 @@ class PlayGameScene extends Phaser.Scene {
     onOpenAlarmEvent () {
         const music = this.sound.add('double-click')
         music.play()
-
         if (this.openModal) return
         this.openModal = true
         this.calenderEvent.pause()
@@ -227,7 +212,6 @@ class PlayGameScene extends Phaser.Scene {
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.alarmTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
         this.alarm = this.add.text(400, 250, this.alarmHistory[this.eventIndex].description, { font: '24px', fill: '#000' }).setOrigin(0.5)
-
         this.close.on('pointerup', this.onCloseAlarmEvent, this)
     }
 
@@ -244,17 +228,13 @@ class PlayGameScene extends Phaser.Scene {
     onOpenHistoryEvent () {
         const music = this.sound.add('double-click')
         music.play()
-
         if (this.openModal) return
         this.openModal = true
         this.calenderEvent.pause()
         this.image = this.add.sprite(200, 30, 'history-message').setOrigin(0.0).setScale(1.3).setInteractive()
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.taskTitle = this.add.text(280, 95, 'YOUR WORK HISTORY', { font: '24px', fill: '#000' })
-
         this.pointEvent.display()
-        // graphics.fillStyle(0xffffff);
-
         this.close.on('pointerup', this.onCloseHistory, this)
     }
 
