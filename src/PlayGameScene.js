@@ -8,9 +8,15 @@ class PlayGameScene extends Phaser.Scene {
         super(SCENE_PLAY_GAME)
     }
 
+    init (data) {
+        this.playerName = data
+    }
+
     preload () {
         this.load.bitmapFont('atari', 'fonts/atari-classic.png', './fonts/atari-classic.xml')
-        this.load.image('play-screen', 'images/play-screen.png')
+        this.load.bitmapFont('visitor', 'fonts/visitor2.png', './fonts/visitor2.xml')
+
+        // this.load.image('play-screen', 'images/play-screen.png')
         this.load.image('service-task', 'images/service-task.png')
         this.load.image('score', 'images/score.png')
         this.load.image('close-button', 'images/close-button.png')
@@ -20,6 +26,9 @@ class PlayGameScene extends Phaser.Scene {
         this.load.image('history-message', 'images/history-message.png')
         this.load.image('check-box', 'images/check-box.png')
         this.load.image('checked-box', 'images/checked-box.png')
+        this.load.image('working1', 'images/working1.png')
+        this.load.image('working2', 'images/working2.png')
+        this.load.image('button-white', 'images/plain-box.png')
 
         this.load.json('actions', 'actions.json')
         this.load.path = 'images/action/'
@@ -34,7 +43,23 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     create () {
-        this.add.sprite(400, 300, 'play-screen')
+        /** Play main animation */
+        this.anims.create({
+            key: 'working',
+            frames: [
+                { key: 'working1' },
+                { key: 'working2', duration: 200 }
+            ],
+            frameRate: 8,
+            repeat: -1
+        })
+
+        this.add.sprite(30, 20, 'button-white').setOrigin(0).setScale(0.09).setInteractive()
+        this.add.bitmapText(40, 36, 'visitor', this.playerName).setOrigin(0).setScale(0.14)
+
+        this.add.sprite(280, 300, 'working1').play('working').setScale(0.28)
+
+        // this.add.sprite(400, 300, 'play-screen')
         this.add.sprite(400, 30, 'score').setScale(0.3)
 
         const alarm = this.add.sprite(540, 50, 'alarm').setOrigin(0.5).setScale(0.08).setInteractive()
@@ -80,8 +105,6 @@ class PlayGameScene extends Phaser.Scene {
         this.add.bitmapText(750, 440, 'atari', 'EVENT').setOrigin(0.5).setScale(0.17)
 
         this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.point).setOrigin(0.5).setScale(0.6)
-        // a['text'] = 33
-        // console.log('##' + a['text'])
         /** add event */
         const actions = [server, database, security, autoscaling, monitor, network, storage, event]
         actions.forEach(service => service.on('pointerup', this.onOpenTaskEvent.bind(this, service), this))
@@ -108,7 +131,7 @@ class PlayGameScene extends Phaser.Scene {
         data.forEach((action, index) => {
             const item = this.add.bitmapText(150, 200 + (index * 40), 'atari', action.title).setScale(0.3)
             const found = this.actionHistory.find(element => element > 10)
-            const checkedAction = this.actionHistory.find(element => element == action.title)
+            const checkedAction = this.actionHistory.find(element => element === action.title)
 
             if (checkedAction != null) {
                 const checkedBox = this.add.sprite(115, 200 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
