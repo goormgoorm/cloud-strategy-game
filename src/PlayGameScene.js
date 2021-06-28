@@ -160,9 +160,9 @@ class PlayGameScene extends Phaser.Scene {
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.alarmTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
 
-        this.alarmHistory.forEach((value, index) => {
-            this.alarm = this.add.text(400, 250, value.description, { font: '24px', fill: '#000' }).setOrigin(0.5)
-        })
+        const eventIndex = this.calenderEvent.getEventIndex()
+        this.alarm = this.add.text(400, 250, this.alarmHistory[eventIndex].description, { font: '24px', fill: '#000' }).setOrigin(0.5)
+
         this.close.on('pointerup', this.onCloseAlarmEvent, this)
     }
 

@@ -14,7 +14,7 @@ class Calender extends Phaser.Scene {
     create () {
         const year = 2021
         this.seasonIndex = 0
-        this.startDay = 1
+        this.currentDay = 1
         this.season = this.cache.json.get('season')[this.seasonIndex]
         this.g = this.add.group()
 
@@ -23,7 +23,7 @@ class Calender extends Phaser.Scene {
         this.g.add(this.add.bitmapText(540, 175, 'atari', year).setScale(0.5).setOrigin(0.5).setFontSize(18))
         this.month = this.add.bitmapText(540, 200, 'atari', '').setScale(0.5).setOrigin(0.5).setFontSize(25).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
         this.g.add(this.month)
-        this.day = this.add.bitmapText(540, 230, 'atari', this.startDay).setScale(0.5).setOrigin(0.5).setFontSize(40).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
+        this.day = this.add.bitmapText(540, 230, 'atari', this.currentDay).setScale(0.5).setOrigin(0.5).setFontSize(40).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
         this.g.add(this.day)
         this.createTimeEvent()
     }
@@ -40,10 +40,6 @@ class Calender extends Phaser.Scene {
         this.timedEvent = this.time.addEvent({ delay: 365, callback: this.onTimeEvent, callbackScope: this, loop: true })
     }
 
-    availableRandom () {
-        return this.day.text === 1 && this.seasonIndex % 3 === 0
-    }
-
     onTimeEvent () {
         if (this.day.text < this.season.days) {
             this.day.setText(++this.day.text)
@@ -57,7 +53,7 @@ class Calender extends Phaser.Scene {
                 this.day.setText(1)
             }
         }
-        this.startDay = this.day.text
+        this.currentDay = this.day.text
     }
 
     pause () {
@@ -68,6 +64,14 @@ class Calender extends Phaser.Scene {
     start () {
         this.g.setVisible(true)
         this.timedEvent.paused = false
+    }
+
+    getEventIndex () {
+        return parseInt(this.seasonIndex / 3)
+    }
+
+    getCurrentDay () {
+        return this.currentDay
     }
 }
 
