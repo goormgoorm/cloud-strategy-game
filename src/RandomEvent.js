@@ -18,6 +18,8 @@ class RandomEvent extends Phaser.Scene {
         this.random()
         this.random()
         this.random()
+        this.random()
+        this.random()
     }
 
     getRandomInt (min, max) {

@@ -13,8 +13,8 @@ class Calender extends Phaser.Scene {
 
     create () {
         const year = 2021
-        this.seasonIndex = 0
-        this.currentDay = 1
+        this.seasonIndex = 2
+        this.currentDay = 10
         this.season = this.cache.json.get('season')[this.seasonIndex]
         this.g = this.add.group()
 
@@ -56,8 +56,10 @@ class Calender extends Phaser.Scene {
         this.currentDay = this.day.text
     }
 
-    pause () {
-        this.g.setVisible(false)
+    pause (flag) {
+        if (!flag) {
+            this.g.setVisible(false)
+        }
         this.timedEvent.paused = true
     }
 
@@ -67,7 +69,7 @@ class Calender extends Phaser.Scene {
     }
 
     getEventIndex () {
-        return parseInt(this.seasonIndex / 3) || 0
+        return parseInt(this.seasonIndex / 2) || 0
     }
 
     getCurrentDay () {

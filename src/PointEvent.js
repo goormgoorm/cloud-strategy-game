@@ -7,6 +7,7 @@ class PointEvent extends Phaser.Scene {
         this.point = 100
         this.alarmItem = {}
         this.actionItems = []
+        this.plusPoint = 0
     }
 
     preload () {
@@ -44,11 +45,9 @@ class PointEvent extends Phaser.Scene {
         this.g.add(works)
     }
 
-    setAlarmItem (item, index) {
-        const selectedActionIds = this.actionItems.map(item => item.id)
-        this.alarmItem[index] = this.actionItems.filter
-        item.defenseActions.includes(selectedActionIds)
-        this.alarmItem = item
+    setAlarmItem (alarm, index) {
+        this.alarmItem[index] = this.actionItems.filter(item => alarm.defenseActions.includes(item.id)).length * alarm.point
+        this.plusPoint += this.alarmItem[index]
     }
 
     setActionItems (actionItems) {
@@ -58,10 +57,9 @@ class PointEvent extends Phaser.Scene {
 
     calculate () {
         this.pointReset()
-        const result = this.actionItems.reduce((acc, cur) => {
-            return acc + cur.point
-        }, 0)
-        return this.point - result
+        const sumPoint = (acc, cur) => acc + cur.point
+        const minusPoint = this.actionItems.reduce(sumPoint, 0)
+        return this.point - minusPoint + this.plusPoint
     }
 
     pointReset () {

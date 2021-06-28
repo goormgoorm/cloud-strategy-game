@@ -1,5 +1,11 @@
 import Phaser from 'phaser'
-import { SCENE_PLAY_GAME } from './constant'
+import {
+    SCENE_PLAY_GAME,
+    SOUND_BGM_OFFICE,
+    SOUND_EFFTCT_CLICK,
+    SOUND_EFFTCT_ERROR,
+    SOUND_EFFTCT_POINT
+} from './constant'
 import { RandomEvent } from './RandomEvent'
 import { PointEvent } from './PointEvent'
 import { Calender } from './Calender'
@@ -52,7 +58,7 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     create () {
-        const music = this.sound.add('office-sound')
+        const music = this.sound.add(SOUND_BGM_OFFICE)
         music.setLoop(true)
         music.play()
 
@@ -117,13 +123,14 @@ class PlayGameScene extends Phaser.Scene {
         this.add.bitmapText(750, 380, 'atari', 'STORAGE').setOrigin(0.5).setScale(0.17)
         const event = this.add.sprite(750, 440, 'event').setOrigin(0.5).setScale(0.08).setInteractive()
         event.name = 'event'
-<<<<<<< HEAD
         this.add.bitmapText(750, 440, 'atari', 'EVENT').setOrigin(0.5).setScale(0.17)
-=======
-        this.add.bitmapText(750, 480, 'atari', 'EVENT').setOrigin(0.5).setScale(0.17)
-
->>>>>>> 8800a15ec6391f10dd1c14e5e2c44b44abea925e
         this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.point).setOrigin(0.5).setScale(0.6)
+
+        /** music */
+        this.music = {}
+        this.music[SOUND_EFFTCT_CLICK] = this.sound.add(SOUND_EFFTCT_CLICK)
+        this.music[SOUND_EFFTCT_ERROR] = this.sound.add(SOUND_EFFTCT_ERROR)
+        this.music[SOUND_EFFTCT_POINT] = this.sound.add(SOUND_EFFTCT_POINT)
 
         /** add event */
         const actions = [server, database, security, autoscaling, monitor, network, storage, event]
@@ -141,18 +148,29 @@ class PlayGameScene extends Phaser.Scene {
         this.alarmHistory = this.randomEvent.getHistory()
         if (this.eventIndex !== this.calenderEvent.getEventIndex()) {
             this.eventIndex = this.calenderEvent.getEventIndex()
-            this.pointEvent.setAlarmItem(this.alarmHistory[this.eventIndex], this.eventIndex)
+            this.pointEvent.setAlarmItem(this.alarmHistory[this.eventIndex - 1], this.eventIndex - 1)
+            if (this.eventIndex < this.alarmHistory.length) this.alertEvent()
         }
+        this.point.destroy()
+        this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.calculate()).setOrigin(0.5).setScale(0.6)
     }
 
-    eventCheck () {
-        console.log('event check')
+    alertEvent () {
+        this.openModal = true
+        const alertUI = this.add.sprite(400, 300, 'alarm-message').setScale(1).setOrigin(0.5).setInteractive()
+        const alertText = this.add.text(300, 250, '새로운 이벤트가 발생!\n\n알림을 확인하세요', { font: '24px', fill: '#000' })
+        this.calenderEvent.pause()
+        alertUI.on('pointerup', () => {
+            alertUI.destroy()
+            alertText.destroy()
+            this.openModal = false
+            this.calenderEvent.start()
+        }, this)
     }
 
     /** Task Modal */
     onOpenTaskEvent (service) {
-        const music = this.sound.add('double-click')
-        music.play()
+        this.music[SOUND_EFFTCT_CLICK].play()
         if (this.openModal) return
         this.openModal = true
         this.calenderEvent.pause()
@@ -179,11 +197,13 @@ class PlayGameScene extends Phaser.Scene {
         const calculatedPoint = this.pointEvent.calculate()
 
         if (calculatedPoint < 50) {
-            const music = this.sound.add('error-sound')
-            music.play()
+            this.music[SOUND_EFFTCT_ERROR].play()
             this.pointEvent.setActionItems(this.actionHistory)
             this.actionHistory.pop()
             if (!this.alertFlag) {
+                if (this.alert) this.alert.destroy()
+                if (this.alertClose) this.alertClose.destroy()
+                if (this.alertMessage) this.alertMessage.destroy()
                 this.alert = this.add.sprite(400, 300, 'alert-pop-up').setScale(0.3)
                 this.alertMessage = this.add.bitmapText(395, 300, 'atari', 'YOU HAVE NO POINTS').setOrigin(0.5).setScale(0.25)
                 this.alertClose = this.add.sprite(530, 230, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
@@ -191,22 +211,16 @@ class PlayGameScene extends Phaser.Scene {
                 this.alertFlag = true
             }
         } else {
-            const music = this.sound.add('point-sound')
-            music.play()
+            this.music[SOUND_EFFTCT_POINT].play()
             this.checkedBox[index].destroy()
             this.checkedBox[index] = this.add.sprite(113, 196.5 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
-            this.point.destroy()
-            this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.calculate()).setOrigin(0.5).setScale(0.6)
+            // this.point.destroy()
+            // this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.calculate()).setOrigin(0.5).setScale(0.6)
         }
     }
 
     onCloseAlert () {
-<<<<<<< HEAD
-=======
-        const music = this.sound.add('double-click')
-        music.play()
-
->>>>>>> 8800a15ec6391f10dd1c14e5e2c44b44abea925e
+        this.music[SOUND_EFFTCT_CLICK].play()
         this.alert.destroy()
         this.alertClose.destroy()
         this.alertMessage.destroy()
@@ -214,13 +228,8 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     onCloseTaskEvent (service) {
-<<<<<<< HEAD
         if (this.alertFlag) return
-=======
-        const music = this.sound.add('double-click')
-        music.play()
-
->>>>>>> 8800a15ec6391f10dd1c14e5e2c44b44abea925e
+        this.music[SOUND_EFFTCT_CLICK].play()
         this.openModal = false
         this.image.destroy()
         this.close.destroy()
@@ -232,41 +241,30 @@ class PlayGameScene extends Phaser.Scene {
 
     /** Alarm Modal */
     onOpenAlarmEvent () {
-        const music = this.sound.add('double-click')
-        music.play()
+        this.music[SOUND_EFFTCT_CLICK].play()
         if (this.openModal) return
         this.openModal = true
-        this.calenderEvent.pause()
-        this.image = this.add.sprite(200, 30, 'alarm-message').setOrigin(0.0).setScale(1.3).setInteractive()
-        this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
-        this.alarmTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
-<<<<<<< HEAD
-        this.alarm = this.add.text(400, 250, this.alarmHistory[this.eventIndex].description, { font: '24px', fill: '#000' }).setOrigin(0.5)
-=======
-
-        const eventIndex = this.calenderEvent.getEventIndex()
-        this.alarm = this.add.text(415, 250, this.alarmHistory[eventIndex].description, { font: '24px', fill: '#000' }).setOrigin(0.5).setScale('0.8')
-
->>>>>>> 8800a15ec6391f10dd1c14e5e2c44b44abea925e
-        this.close.on('pointerup', this.onCloseAlarmEvent, this)
+        this.calenderEvent.pause(true)
+        this.dialog = this.add.sprite(400, 450, 'text-box').setOrigin(0.5).setScale(0.9).setInteractive()
+        // this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
+        // this.alarmTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
+        this.alarm = this.add.text(120, 350, '\n[이벤트 알림]\n' + this.alarmHistory[this.eventIndex].description, { font: '24px', fill: '#000' })
+        this.dialog.on('pointerup', this.onCloseAlarmEvent, this)
     }
 
     onCloseAlarmEvent () {
-        const music = this.sound.add('double-click')
-        music.play()
-
+        this.music[SOUND_EFFTCT_CLICK].play()
         this.openModal = false
-        this.image.destroy()
-        this.close.destroy()
-        this.alarmTitle.destroy()
+        this.dialog.destroy()
+        // this.close.destroy()
+        // this.alarmTitle.destroy()
         this.alarm.destroy()
         this.calenderEvent.start()
     }
 
     /** History Modal */
     onOpenHistoryEvent () {
-        const music = this.sound.add('double-click')
-        music.play()
+        this.music[SOUND_EFFTCT_CLICK].play()
         if (this.openModal) return
         this.openModal = true
         this.calenderEvent.pause()
@@ -278,9 +276,7 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     onCloseHistory () {
-        const music = this.sound.add('double-click')
-        music.play()
-
+        this.music[SOUND_EFFTCT_CLICK].play()
         this.openModal = false
         this.pointEvent.hide()
         this.image.destroy()

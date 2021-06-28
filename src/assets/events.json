@@ -2,7 +2,7 @@
     {
         "id": 1,
         "title": "Hacker attack",
-        "description": "해커가 해킹을 시도합니다",
+        "description": "해커가 해킹을 시도합니다(1)",
         "point": 100,
         "defenseActions": [
             4
@@ -11,7 +11,7 @@
     {
         "id": 2,
         "title": "Over Traffic",
-        "description": "이벤트로 인해 많은 트래픽 발생이 예상됩니다",
+        "description": "이벤트로 인해 많은 트래픽 발생이 예상됩니다(2)",
         "point": 100,
         "defenseActions": [
             1, 8
@@ -20,7 +20,7 @@
     {
         "id": 3,
         "title": "Access/Secret key leak",
-        "description": "보안감사 결과,\n엑세스/시크릿 키\n유출이 우려됩니다.",
+        "description": "보안감사 결과, 엑세스/시크릿 키 유출이 우려됩니다(3)",
         "point": 100,
         "defenseActions": [
             5, 6, 7
@@ -29,7 +29,7 @@
     {
         "id": 4,
         "title": "Cost Savings",
-        "description": "빌링팀으로부터 비용 절감을 요청 받았습니다",
+        "description": "빌링팀으로부터 비용 절감을 요청 받았습니다(2)",
         "point": 100,
         "defenseActions": [
             2, 3
@@ -38,7 +38,7 @@
     {
         "id": 5,
         "title": "External Secturity",
-        "description": "외부 보안 정책을 강화가 필요합니다",
+        "description": "외부 접속 불가능한 사설 네트워크 구축이 필요합니다(1)",
         "point": 100,
         "defenseActions": [
             12
@@ -47,7 +47,7 @@
     {
         "id": 6,
         "title": "Database failure is expected due to service load",
-        "description": "데이터베이스 부하로 장애가 예상됩니다",
+        "description": "데이터베이스 부하로 장애가 예상됩니다(3)",
         "point": 100,
         "defenseActions": [
             9, 10, 11
