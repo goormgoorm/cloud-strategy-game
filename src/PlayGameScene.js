@@ -115,6 +115,10 @@ class PlayGameScene extends Phaser.Scene {
         this.checkedActions = []
     }
 
+    update () {
+        this.alarmHistory = this.randomEvent.getHistory()
+    }
+
     /** Task Modal */
     onOpenTaskEvent (service) {
         if (this.openModal) return
@@ -178,12 +182,10 @@ class PlayGameScene extends Phaser.Scene {
         this.image = this.add.sprite(200, 30, 'alarm-message').setOrigin(0.0).setScale(1.3).setInteractive()
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.alarmTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
-        this.alarmContents = []
-        const events = ['alarm1', 'alarm2']
-        events.forEach((value, index) => {
-            const alarm = this.add.text(350, 150 + (index * 20), value, { font: '24px', fill: '#000' })
-            this.alarmContents.push(alarm)
-        })
+
+        const eventIndex = this.calenderEvent.getEventIndex()
+        this.alarm = this.add.text(400, 250, this.alarmHistory[eventIndex].description, { font: '24px', fill: '#000' }).setOrigin(0.5)
+
         this.close.on('pointerup', this.onCloseAlarmEvent, this)
     }
 
@@ -192,9 +194,7 @@ class PlayGameScene extends Phaser.Scene {
         this.image.destroy()
         this.close.destroy()
         this.alarmTitle.destroy()
-        this.alarmContents.forEach(alarm => {
-            alarm.destroy()
-        })
+        this.alarm.destroy()
         this.calenderEvent.start()
     }
 
