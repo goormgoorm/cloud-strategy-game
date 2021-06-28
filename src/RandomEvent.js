@@ -14,7 +14,7 @@ class RandomEvent extends Phaser.Scene {
         this.history = []
         this.quests = this.cache.json.get('events')
         this.max = this.quests.length
-        console.log(this.random())
+        console.log(this)
     }
 
     getRandomInt (min, max) {
@@ -28,6 +28,7 @@ class RandomEvent extends Phaser.Scene {
         const randomEvent = this.quests[num]
         this.quests.splice(num, 1)
         this.history.push(randomEvent)
+        console.log(this.history)
         return randomEvent
     }
 

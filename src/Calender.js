@@ -40,6 +40,10 @@ class Calender extends Phaser.Scene {
         this.timedEvent = this.time.addEvent({ delay: 365, callback: this.onTimeEvent, callbackScope: this, loop: true })
     }
 
+    availableRandom () {
+        return this.day.text === 1 && this.seasonIndex % 3 === 0
+    }
+
     onTimeEvent () {
         if (this.day.text < this.season.days) {
             this.day.setText(++this.day.text)
@@ -53,6 +57,7 @@ class Calender extends Phaser.Scene {
                 this.day.setText(1)
             }
         }
+        this.startDay = this.day.text
     }
 
     pause () {
