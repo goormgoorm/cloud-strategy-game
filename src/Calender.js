@@ -67,7 +67,7 @@ class Calender extends Phaser.Scene {
     }
 
     getEventIndex () {
-        return parseInt(this.seasonIndex / 3)
+        return parseInt(this.seasonIndex / 3) || 0
     }
 
     getCurrentDay () {

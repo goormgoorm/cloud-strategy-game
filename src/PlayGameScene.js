@@ -50,7 +50,7 @@ class PlayGameScene extends Phaser.Scene {
 
         // random event
         this.randomEvent = this.scene.add('random-event', RandomEvent, true)
-
+        this.eventIndex = 0
         // left
         const server = this.add.sprite(60, 100, 'server').setOrigin(0.5).setScale(0.08).setInteractive()
         server.name = 'server'
@@ -94,6 +94,14 @@ class PlayGameScene extends Phaser.Scene {
 
     update () {
         this.alarmHistory = this.randomEvent.getHistory()
+        if (this.eventIndex !== this.calenderEvent.getEventIndex()) {
+            this.eventIndex = this.calenderEvent.getEventIndex()
+            this.pointEvent.setAlarmItem(this.alarmHistory[this.eventIndex], this.eventIndex)
+        }
+    }
+
+    eventCheck () {
+        console.log('event check')
     }
 
     /** Task Modal */
@@ -136,7 +144,6 @@ class PlayGameScene extends Phaser.Scene {
         this.actionHistory.push(item.text)
 
         this.pointEvent.setActionItems(this.checkedActions)
-        this.pointEvent.setActions(this.actionHistory)
 
         this.point.destroy()
         this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.calculate()).setOrigin(0.5).setScale(0.6)
@@ -159,9 +166,7 @@ class PlayGameScene extends Phaser.Scene {
         this.image = this.add.sprite(200, 30, 'alarm-message').setOrigin(0.0).setScale(1.3).setInteractive()
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.alarmTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
-
-        const eventIndex = this.calenderEvent.getEventIndex()
-        this.alarm = this.add.text(400, 250, this.alarmHistory[eventIndex].description, { font: '24px', fill: '#000' }).setOrigin(0.5)
+        this.alarm = this.add.text(400, 250, this.alarmHistory[this.eventIndex].description, { font: '24px', fill: '#000' }).setOrigin(0.5)
 
         this.close.on('pointerup', this.onCloseAlarmEvent, this)
     }
