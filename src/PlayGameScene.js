@@ -4,7 +4,6 @@ import { RandomEvent } from './RandomEvent'
 import { PointEvent } from './PointEvent'
 import { Calender } from './Calender'
 class PlayGameScene extends Phaser.Scene {
-
     constructor () {
         super(SCENE_PLAY_GAME)
     }
@@ -131,10 +130,10 @@ class PlayGameScene extends Phaser.Scene {
         this.checkedBox = this.add.sprite(113, 196.5 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
 
         const actionJson = this.cache.json.get('actions')
-        const checkedAction = actionJson.filter(element => element.title === item['text'])
+        const checkedAction = actionJson.filter(element => element.title === item.text)
 
         this.checkedActions.push(checkedAction[0])
-        this.actionHistory.push(item['text'] )
+        this.actionHistory.push(item.text)
 
         this.pointEvent.setActionItems(this.checkedActions)
         this.pointEvent.setActions(this.actionHistory)
