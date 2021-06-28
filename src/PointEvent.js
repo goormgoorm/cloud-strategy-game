@@ -5,9 +5,9 @@ class PointEvent extends Phaser.Scene {
     constructor () {
         super(POINT_EVENT)
         this.point = 100
-        this.actions = []
         this.alarms = []
-        // this.actionHistory = []
+        this.actions = []
+        this.actionItems = [] // Action Object Array From ActionJsonFile
     }
 
     preload () {
@@ -20,8 +20,6 @@ class PointEvent extends Phaser.Scene {
     }
 
     display () {
-        // console.log('clicekd')
-        // console.log(actionHistory)
         const graphics = this.make.graphics()
         graphics.fillRect(230, 150, 380, 320)
 
@@ -33,6 +31,9 @@ class PointEvent extends Phaser.Scene {
         // test
         console.log(this.actions)
         console.log(this.alarms)
+        this.actionItems.forEach(value => {
+            console.log('333' + value.score)
+        })
 
         //  The rectangle they can 'drag' within
         const zone = this.add.zone(200, 150, 500, 500).setOrigin(0).setInteractive()
@@ -47,10 +48,31 @@ class PointEvent extends Phaser.Scene {
 
     setActions (actions) {
         this.actions = actions
+        console.log(actions)
     }
 
     setAlarms (alarms) {
         this.alarms = alarms
+    }
+
+    setActionItems (actionItems) {
+        this.actionItems = actionItems
+
+        this.calculate()
+        // const a = actionItems[0]
+        // console.log(a['point'])
+    }
+
+    calculate () {
+        let result = this.actionItems.reduce((acc, cur) => {
+            return acc + cur['point'];
+        }, 0);
+        this.pointReset()
+        return this.point - result
+    }
+
+    pointReset () {
+        this.point = 100
     }
 
     hide () {
