@@ -34,8 +34,9 @@ class PlayGameScene extends Phaser.Scene {
         this.load.image('service-task', 'images/service-task.png')
         this.load.image('score', 'images/score.png')
         this.load.image('close-button', 'images/close-button.png')
-        this.load.image('alarm', 'images/alarm.png')
+        this.load.image('alarm', 'images/bell.png')
         this.load.image('alarm-message', 'images/alarm-message.png')
+        this.load.image('reminder', 'images/reminder.png')
         this.load.image('history', 'images/history.png')
         this.load.image('history-message', 'images/history-message.png')
         this.load.image('check-box', 'images/check-box.png')
@@ -44,6 +45,8 @@ class PlayGameScene extends Phaser.Scene {
         this.load.image('working2', 'images/working2.png')
         this.load.image('button-white', 'images/plain-box.png')
         this.load.image('alert-pop-up', 'images/alertpopup.png')
+        this.load.image('alarm-box', 'images/alarm-box.png')
+        this.load.image('text-box-pop-up', 'images/text-box-pop-up.png')
 
         this.load.json('actions', 'actions.json')
         this.load.path = 'images/action/'
@@ -82,7 +85,7 @@ class PlayGameScene extends Phaser.Scene {
         // this.add.sprite(400, 300, 'play-screen')
         this.add.sprite(400, 30, 'score').setScale(0.3)
 
-        const alarm = this.add.sprite(530, 45, 'alarm').setOrigin(0.5).setScale(0.09).setInteractive()
+        const alarm = this.add.sprite(530, 45, 'alarm').setOrigin(0.5).setScale(0.1).setInteractive()
         alarm.on('pointerup', this.onOpenAlarmEvent, this)
 
         // history
@@ -157,12 +160,14 @@ class PlayGameScene extends Phaser.Scene {
 
     alertEvent () {
         this.openModal = true
-        const alertUI = this.add.sprite(400, 300, 'alarm-message').setScale(1).setOrigin(0.5).setInteractive()
-        const alertText = this.add.text(270, 210, '문제가 생겼습니다!\n\n당신의 도움이 필요해요\n\n알림 내용을 확인하시고\n\n적절한 조치를 취해주세요.', { font: '24px', fill: '#000' })
+        const alertUI = this.add.sprite(50, 150, 'text-box-pop-up').setScale(0.4).setOrigin(0).setInteractive()
+        const reminder = this.add.sprite(140, 240, 'reminder').setOrigin(0.5).setScale(0.18).setInteractive()
+        const alertText = this.add.text(220, 200, '문제가 생겼습니다!\n\n알림 내용을 확인하시고\n\n시간 내에 적절한 조치를 취해주세요.', { font: '20px', fill: '#000' })
         this.calenderEvent.pause()
         alertUI.on('pointerup', () => {
             alertUI.destroy()
             alertText.destroy()
+            reminder.destroy()
             this.openModal = false
             this.calenderEvent.start()
         }, this)
@@ -201,14 +206,15 @@ class PlayGameScene extends Phaser.Scene {
             this.pointEvent.setActionItems(this.actionHistory)
             this.actionHistory.pop()
             if (!this.alertFlag) {
+                this.alertClose = this.add.sprite(530, 230, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
                 if (this.alert) this.alert.destroy()
                 if (this.alertClose) this.alertClose.destroy()
                 if (this.alertMessage) this.alertMessage.destroy()
                 this.alert = this.add.sprite(400, 300, 'alert-pop-up').setScale(0.3)
                 this.alertMessage = this.add.bitmapText(395, 300, 'atari', 'YOU HAVE NO POINTS').setOrigin(0.5).setScale(0.25)
-                this.alertClose = this.add.sprite(530, 230, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
-                this.alertClose.on('pointerup', this.onCloseAlert.bind(this), this)
                 this.alertFlag = true
+
+                this.alertClose.on('pointerup', this.onCloseAlert.bind(this), this)
             }
         } else {
             this.music[SOUND_EFFTCT_POINT].play()
@@ -242,23 +248,23 @@ class PlayGameScene extends Phaser.Scene {
     /** Alarm Modal */
     onOpenAlarmEvent () {
         this.music[SOUND_EFFTCT_CLICK].play()
+        this.calenderEvent.pause(true)
         if (this.openModal) return
         this.openModal = true
-        this.calenderEvent.pause(true)
-        this.dialog = this.add.sprite(400, 450, 'text-box').setOrigin(0.5).setScale(0.9).setInteractive()
-        // this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
+        this.alarmDialog = this.add.sprite(80, 180, 'alarm-box').setOrigin(0).setScale(0.37).setInteractive()
         // this.alarmTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
-        this.alarm = this.add.text(120, 350, '\n[이벤트 알림]\n' + this.alarmHistory[this.eventIndex].description, { font: '24px', fill: '#000' })
-        this.dialog.on('pointerup', this.onCloseAlarmEvent, this)
+        this.alarm = this.add.text(120, 200, '\n[알림]\n\n' + this.alarmHistory[this.eventIndex].description, { font: '20px', fill: '#fff' })
+        this.close = this.add.sprite(650, 190, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
+        this.close.on('pointerup', this.onCloseAlarmEvent, this)
     }
 
     onCloseAlarmEvent () {
+        console.log('close button clicked')
         this.music[SOUND_EFFTCT_CLICK].play()
         this.openModal = false
-        this.dialog.destroy()
-        // this.close.destroy()
-        // this.alarmTitle.destroy()
+        this.alarmDialog.destroy()
         this.alarm.destroy()
+        this.close.destroy()
         this.calenderEvent.start()
     }
 

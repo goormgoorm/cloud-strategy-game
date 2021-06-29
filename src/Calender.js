@@ -19,11 +19,11 @@ class Calender extends Phaser.Scene {
         this.g = this.add.group()
 
         // calender
-        this.g.add(this.add.sprite(540, 210, 'calender').setScale(0.25))
-        this.g.add(this.add.bitmapText(540, 175, 'atari', year).setScale(0.5).setOrigin(0.5).setFontSize(18))
-        this.month = this.add.bitmapText(540, 200, 'atari', '').setScale(0.5).setOrigin(0.5).setFontSize(25).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
+        this.g.add(this.add.sprite(570, 160, 'calender').setScale(0.25))
+        this.g.add(this.add.bitmapText(570, 125, 'atari', year).setScale(0.5).setOrigin(0.5).setFontSize(18))
+        this.month = this.add.bitmapText(570, 150, 'atari', '').setScale(0.5).setOrigin(0.5).setFontSize(25).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
         this.g.add(this.month)
-        this.day = this.add.bitmapText(540, 230, 'atari', this.currentDay).setScale(0.5).setOrigin(0.5).setFontSize(40).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
+        this.day = this.add.bitmapText(570, 180, 'atari', this.currentDay).setScale(0.5).setOrigin(0.5).setFontSize(40).setTintFill('0x000000', '0x000000', '0x000000', '0x000000')
         this.g.add(this.day)
         this.createTimeEvent()
     }
