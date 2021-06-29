@@ -1,11 +1,5 @@
 import Phaser from 'phaser'
-import {
-    SCENE_PLAY_GAME,
-    SOUND_BGM_OFFICE,
-    SOUND_EFFTCT_CLICK,
-    SOUND_EFFTCT_ERROR,
-    SOUND_EFFTCT_POINT
-} from './constant'
+import { SCENE_PLAY_GAME } from './constant'
 import { RandomEvent } from './RandomEvent'
 import { PointEvent } from './PointEvent'
 import { Calender } from './Calender'
@@ -58,7 +52,7 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     create () {
-        const music = this.sound.add(SOUND_BGM_OFFICE)
+        const music = this.sound.add('office-sound')
         music.setLoop(true)
         music.play()
 
@@ -77,6 +71,7 @@ class PlayGameScene extends Phaser.Scene {
 
         this.add.sprite(30, 20, 'button-white').setOrigin(0).setScale(0.09).setInteractive()
         this.add.bitmapText(40, 36, 'visitor', this.playerName).setOrigin(0).setScale(0.14)
+
         this.add.sprite(280, 300, 'working1').play('working').setScale(0.28)
 
         // this.add.sprite(400, 300, 'play-screen')
@@ -95,7 +90,6 @@ class PlayGameScene extends Phaser.Scene {
 
         // random event
         this.randomEvent = this.scene.add('random-event', RandomEvent, true)
-        this.eventIndex = 0
 
         // left
         const server = this.add.sprite(60, 140, 'server').setOrigin(0.5).setScale(0.08).setInteractive()
@@ -123,160 +117,166 @@ class PlayGameScene extends Phaser.Scene {
         this.add.bitmapText(750, 380, 'atari', 'STORAGE').setOrigin(0.5).setScale(0.17)
         const event = this.add.sprite(750, 440, 'event').setOrigin(0.5).setScale(0.08).setInteractive()
         event.name = 'event'
-        this.add.bitmapText(750, 440, 'atari', 'EVENT').setOrigin(0.5).setScale(0.17)
+        this.add.bitmapText(750, 480, 'atari', 'EVENT').setOrigin(0.5).setScale(0.17)
+
         this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.point).setOrigin(0.5).setScale(0.6)
-
-        /** music */
-        this.music = {}
-        this.music[SOUND_EFFTCT_CLICK] = this.sound.add(SOUND_EFFTCT_CLICK)
-        this.music[SOUND_EFFTCT_ERROR] = this.sound.add(SOUND_EFFTCT_ERROR)
-        this.music[SOUND_EFFTCT_POINT] = this.sound.add(SOUND_EFFTCT_POINT)
-
         /** add event */
         const actions = [server, database, security, autoscaling, monitor, network, storage, event]
         actions.forEach(service => service.on('pointerup', this.onOpenTaskEvent.bind(this, service), this))
-        this.actions = this.cache.json.get('actions')
-        this.alertFlag = false
         this.openModal = false
         this.tasks = {}
-        this.alarmHistory = []
         this.actionHistory = []
-        this.checkedBox = []
+        this.alarmHistory = []
+        this.checkedActions = []
     }
 
     update () {
         this.alarmHistory = this.randomEvent.getHistory()
-        if (this.eventIndex !== this.calenderEvent.getEventIndex()) {
-            this.eventIndex = this.calenderEvent.getEventIndex()
-            this.pointEvent.setAlarmItem(this.alarmHistory[this.eventIndex - 1], this.eventIndex - 1)
-            if (this.eventIndex < this.alarmHistory.length) this.alertEvent()
-        }
-        this.point.destroy()
-        this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.calculate()).setOrigin(0.5).setScale(0.6)
-    }
-
-    alertEvent () {
-        this.openModal = true
-        const alertUI = this.add.sprite(400, 300, 'alarm-message').setScale(1).setOrigin(0.5).setInteractive()
-        const alertText = this.add.text(300, 250, '새로운 이벤트가 발생!\n\n알림을 확인하세요', { font: '24px', fill: '#000' })
-        this.calenderEvent.pause()
-        alertUI.on('pointerup', () => {
-            alertUI.destroy()
-            alertText.destroy()
-            this.openModal = false
-            this.calenderEvent.start()
-        }, this)
     }
 
     /** Task Modal */
     onOpenTaskEvent (service) {
-        this.music[SOUND_EFFTCT_CLICK].play()
+        const music = this.sound.add('double-click')
+        music.play()
+
         if (this.openModal) return
+
         this.openModal = true
         this.calenderEvent.pause()
         this.image = this.add.sprite(400, 300, 'service-task')
         this.close = this.add.sprite(625, 115, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.taskTitle = this.add.text(150, 130, service.name, { font: '24px', fill: '#000' })
         this.tasks[service.name] = []
-        this.actions.filter(item => item.service === service.name).forEach((action, index) => {
-            const checked = this.actionHistory.find(item => item.id === action.id)
-            const actionTitle = this.add.bitmapText(150, 200 + (index * 40), 'atari', action.title).setScale(0.3)
-            const checkbox = this.add.sprite(115, 200 + (index * 40), checked ? 'checked-box' : 'check-box').setOrigin(0.0).setScale(0.15).setInteractive()
-            if (!checked) checkbox.on('pointerup', this.addActionHistoryEvent.bind(this, action, index), this)
-            this.checkedBox.push(checkbox)
-            this.tasks[service.name].push(actionTitle)
+
+        const data = this.cache.json.get('actions').filter(item => item.service === service.name)
+
+        data.forEach((action, index) => {
+            const item = this.add.bitmapText(150, 200 + (index * 40), 'atari', action.title).setScale(0.3)
+            const found = this.actionHistory.find(element => element > 10)
+            const checkedAction = this.actionHistory.find(element => element === action.title)
+
+            if (checkedAction != null) {
+                const checkedBox = this.add.sprite(115, 200 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
+            } else {
+                const checkBox = this.add.sprite(115, 200 + (index * 40), 'check-box').setOrigin(0.0).setScale(0.15).setInteractive()
+                checkBox.on('pointerup', this.addActionHistoryEvent.bind(this, item, index), this)
+            }
+            this.tasks[service.name].push(item)
         })
 
         this.close.on('pointerup', this.onCloseTaskEvent.bind(this, service), this)
     }
 
-    addActionHistoryEvent (action, index) {
-        this.actionHistory.push(action)
-        this.pointEvent.setActionItems(this.actionHistory)
+    addActionHistoryEvent (item, index) {
+        const actionJson = this.cache.json.get('actions')
+        const checkedAction = actionJson.filter(element => element.title === item.text)
+
+        this.checkedActions.push(checkedAction[0])
+        this.actionHistory.push(item.text)
+
+        this.pointEvent.setActionItems(this.checkedActions)
+        this.pointEvent.setActions(this.actionHistory)
 
         const calculatedPoint = this.pointEvent.calculate()
 
-        if (calculatedPoint < 50) {
-            this.music[SOUND_EFFTCT_ERROR].play()
-            this.pointEvent.setActionItems(this.actionHistory)
+        if (calculatedPoint < 20) {
+            const music = this.sound.add('error-sound')
+            music.play()
+
+            console.log('cannot be under minust point')
+            this.checkedActions.pop()
             this.actionHistory.pop()
-            if (!this.alertFlag) {
-                if (this.alert) this.alert.destroy()
-                if (this.alertClose) this.alertClose.destroy()
-                if (this.alertMessage) this.alertMessage.destroy()
-                this.alert = this.add.sprite(400, 300, 'alert-pop-up').setScale(0.3)
-                this.alertMessage = this.add.bitmapText(395, 300, 'atari', 'YOU HAVE NO POINTS').setOrigin(0.5).setScale(0.25)
-                this.alertClose = this.add.sprite(530, 230, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
-                this.alertClose.on('pointerup', this.onCloseAlert.bind(this), this)
-                this.alertFlag = true
-            }
+            this.pointEvent.setActionItems(this.checkedActions)
+            this.pointEvent.setActions(this.actionHistory)
+
+            this.alert = this.add.sprite(400, 300, 'alert-pop-up').setScale(0.3)
+            this.alertClose = this.add.sprite(530, 230, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
+            this.alertMessage = this.add.bitmapText(395, 300, 'atari', 'YOU HAVE NO POINTS').setOrigin(0.5).setScale(0.25)
+
+            this.alertClose.on('pointerup', this.onCloseAlert.bind(this), this)
         } else {
-            this.music[SOUND_EFFTCT_POINT].play()
-            this.checkedBox[index].destroy()
-            this.checkedBox[index] = this.add.sprite(113, 196.5 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
-            // this.point.destroy()
-            // this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.calculate()).setOrigin(0.5).setScale(0.6)
+            const music = this.sound.add('point-sound')
+            music.play()
+            this.checkedBox = this.add.sprite(113, 196.5 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
+            this.point.destroy()
+            this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.calculate()).setOrigin(0.5).setScale(0.6)
         }
     }
 
     onCloseAlert () {
-        this.music[SOUND_EFFTCT_CLICK].play()
+        const music = this.sound.add('double-click')
+        music.play()
+
         this.alert.destroy()
         this.alertClose.destroy()
         this.alertMessage.destroy()
-        this.alertFlag = false
+        // this.calenderEvent.start()
     }
 
     onCloseTaskEvent (service) {
-        if (this.alertFlag) return
-        this.music[SOUND_EFFTCT_CLICK].play()
+        const music = this.sound.add('double-click')
+        music.play()
+
         this.openModal = false
         this.image.destroy()
         this.close.destroy()
         this.taskTitle.destroy()
         this.tasks[service.name].forEach(task => task.destroy())
-        this.checkedBox.forEach(child => child.destroy())
         this.calenderEvent.start()
     }
 
     /** Alarm Modal */
     onOpenAlarmEvent () {
-        this.music[SOUND_EFFTCT_CLICK].play()
+        const music = this.sound.add('double-click')
+        music.play()
+
         if (this.openModal) return
         this.openModal = true
-        this.calenderEvent.pause(true)
-        this.dialog = this.add.sprite(400, 450, 'text-box').setOrigin(0.5).setScale(0.9).setInteractive()
-        // this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
-        // this.alarmTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
-        this.alarm = this.add.text(120, 350, '\n[이벤트 알림]\n' + this.alarmHistory[this.eventIndex].description, { font: '24px', fill: '#000' })
-        this.dialog.on('pointerup', this.onCloseAlarmEvent, this)
+        this.calenderEvent.pause()
+        this.image = this.add.sprite(200, 30, 'alarm-message').setOrigin(0.0).setScale(1.3).setInteractive()
+        this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
+        this.alarmTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
+
+        const eventIndex = this.calenderEvent.getEventIndex()
+        this.alarm = this.add.text(415, 250, this.alarmHistory[eventIndex].description, { font: '24px', fill: '#000' }).setOrigin(0.5).setScale('0.8')
+
+        this.close.on('pointerup', this.onCloseAlarmEvent, this)
     }
 
     onCloseAlarmEvent () {
-        this.music[SOUND_EFFTCT_CLICK].play()
+        const music = this.sound.add('double-click')
+        music.play()
+
         this.openModal = false
-        this.dialog.destroy()
-        // this.close.destroy()
-        // this.alarmTitle.destroy()
+        this.image.destroy()
+        this.close.destroy()
+        this.alarmTitle.destroy()
         this.alarm.destroy()
         this.calenderEvent.start()
     }
 
     /** History Modal */
     onOpenHistoryEvent () {
-        this.music[SOUND_EFFTCT_CLICK].play()
+        const music = this.sound.add('double-click')
+        music.play()
+
         if (this.openModal) return
         this.openModal = true
         this.calenderEvent.pause()
         this.image = this.add.sprite(200, 30, 'history-message').setOrigin(0.0).setScale(1.3).setInteractive()
         this.close = this.add.sprite(550, 80, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.taskTitle = this.add.text(280, 95, 'YOUR WORK HISTORY', { font: '24px', fill: '#000' })
+
         this.pointEvent.display()
+        // graphics.fillStyle(0xffffff);
+
         this.close.on('pointerup', this.onCloseHistory, this)
     }
 
     onCloseHistory () {
-        this.music[SOUND_EFFTCT_CLICK].play()
+        const music = this.sound.add('double-click')
+        music.play()
+
         this.openModal = false
         this.pointEvent.hide()
         this.image.destroy()
