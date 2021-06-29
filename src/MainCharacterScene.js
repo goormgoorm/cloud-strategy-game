@@ -30,7 +30,7 @@ class MainCharacterScene extends Phaser.Scene {
 
         this.add.text(330, 350, 'only english', { font: '15px Courier', fill: '#000000' })
 
-        const textEntry = this.add.text(340, 300, '', { font: '32px Courier', fill: '#000' })
+        const textEntry = this.add.text(340, 295, '', { font: '32px Courier', fill: '#000' })
         this.input.keyboard.on('keydown', function (event) {
             if (event.keyCode === 13 && textEntry.text.length > 0) {
                 console.log('player name : ' + textEntry.text)

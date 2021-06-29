@@ -179,7 +179,7 @@ class PlayGameScene extends Phaser.Scene {
 
         const calculatedPoint = this.pointEvent.calculate()
 
-        if (calculatedPoint < 80) {
+        if (calculatedPoint < 20) {
             const music = this.sound.add('error-sound')
             music.play()
 
