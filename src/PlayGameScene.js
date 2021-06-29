@@ -158,7 +158,7 @@ class PlayGameScene extends Phaser.Scene {
     alertEvent () {
         this.openModal = true
         const alertUI = this.add.sprite(400, 300, 'alarm-message').setScale(1).setOrigin(0.5).setInteractive()
-        const alertText = this.add.text(300, 250, '새로운 이벤트가 발생!\n\n알림을 확인하세요', { font: '24px', fill: '#000' })
+        const alertText = this.add.text(270, 210, '문제가 생겼습니다!\n\n당신의 도움이 필요해요\n\n알림 내용을 확인하시고\n\n적절한 조치를 취해주세요.', { font: '24px', fill: '#000' })
         this.calenderEvent.pause()
         alertUI.on('pointerup', () => {
             alertUI.destroy()
