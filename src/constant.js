@@ -9,3 +9,8 @@ export const SCENE_GAME_OVER_CLEAR = 'SCENE_GAME_OVER_CLEAR'
 export const RANDOM_EVENT = 'RANDOM_EVENT'
 export const TIME_EVENT = 'TIME_EVENT'
 export const POINT_EVENT = 'POINT_EVENT'
+/** Sound */
+export const SOUND_BGM_OFFICE = 'office-sound'
+export const SOUND_EFFTCT_CLICK = 'double-click'
+export const SOUND_EFFTCT_ERROR = 'error-sound'
+export const SOUND_EFFTCT_POINT = 'point-sound'
