@@ -13,8 +13,8 @@ class Calender extends Phaser.Scene {
 
     create () {
         const year = 2021
-        this.seasonIndex = 3
-        this.currentDay = 25
+        this.seasonIndex = 1
+        this.currentDay = 1
         this.allSeason = this.cache.json.get('season')
         this.season = this.allSeason[this.seasonIndex]
         this.g = this.add.group()
@@ -50,7 +50,7 @@ class Calender extends Phaser.Scene {
             this.seasonIndex++
             if (this.seasonIndex === 12) {
                 this.timedEvent.remove()
-                this.game.sound.destroy()
+                this.game.sound.pauseAll()
                 this.isEnd = true
             } else {
                 this.day.setText(1)

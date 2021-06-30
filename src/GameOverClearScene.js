@@ -82,7 +82,8 @@ class GameOverClearScene extends Phaser.Scene {
 
         this.add.sprite(400, 300, 'main1').play('successCharacter').setScale(1)
         this.add.sprite(400, 300, 'gameclear1').play('gameclear').setScale(0.5)
-        this.add.bitmapText(220, 550, 'atari', 'MELONA X MEGATHON').setOrigin(0).setScale(0.35)
+        this.add.bitmapText(220, 510, 'atari', 'MELONA X MEGATHON').setOrigin(0).setScale(0.32)
+        this.add.bitmapText(300, 545, 'visitor', 'MEGAZONE CLOUD').setOrigin(0).setScale(0.15)
     }
 }
 
