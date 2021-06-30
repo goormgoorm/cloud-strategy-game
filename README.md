@@ -1,3 +1,5 @@
+![cover](https://github.com/goormgoorm/cloud-strategy-game/blob/master/public/logo/cover.png?raw=true)
+
 # Cloud Simulation Game for Education ( Hackathon )
 클라우드에 생소한 신입 사원 혹은 취준생을 대상으로 클라우드에 대한 이해를 돕기 위한 교육용 시뮬레이션 입니다.
 전략 시뮬레이션 게임 처럼 쉽게 즐길 수 있습니다.
