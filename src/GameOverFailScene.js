@@ -19,7 +19,7 @@ class GameOverFailScene extends Phaser.Scene {
         console.log('Game Over - Fail')
         const music = this.sound.add(SOUND_EFFTCT_FAIL)
         music.play()
-        this.add.bitmapText(670, 580, 'atari', 'MELONA X MEGATHON').setOrigin(0.5).setScale(0.2)
+        this.add.bitmapText(670, 580, 'atari', 'HACKATHON').setOrigin(0.5).setScale(0.2)
         this.anims.create({
             key: 'gameover',
             frames: [

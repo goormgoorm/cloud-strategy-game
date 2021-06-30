@@ -70,7 +70,7 @@ class PlayGameScene extends Phaser.Scene {
         music.setLoop(true)
         music.play()
 
-        this.add.bitmapText(670, 580, 'atari', 'MELONA X MEGATHON').setOrigin(0.5).setScale(0.2)
+        this.add.bitmapText(670, 580, 'atari', 'HACKATHON').setOrigin(0.5).setScale(0.2)
 
         /** Play main animation */
         this.anims.create({
