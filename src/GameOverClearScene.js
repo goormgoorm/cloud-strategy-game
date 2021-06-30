@@ -41,7 +41,6 @@ class GameOverClearScene extends Phaser.Scene {
         console.log('Game Over - Clear')
         const music = this.sound.add(SOUND_EFFTCT_CLEAR)
         music.play()
-        this.add.bitmapText(670, 580, 'atari', 'MELONA X MEGATHON').setOrigin(0.5).setScale(0.2)
         this.anims.create({
             key: 'successCharacter',
             frames: [
@@ -83,6 +82,7 @@ class GameOverClearScene extends Phaser.Scene {
 
         this.add.sprite(400, 300, 'main1').play('successCharacter').setScale(1)
         this.add.sprite(400, 300, 'gameclear1').play('gameclear').setScale(0.5)
+        this.add.bitmapText(220, 550, 'atari', 'MELONA X MEGATHON').setOrigin(0).setScale(0.35)
     }
 }
 

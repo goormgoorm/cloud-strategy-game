@@ -184,9 +184,9 @@ class PlayGameScene extends Phaser.Scene {
         }
         this.point.destroy()
         this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.calculate()).setOrigin(0.5).setScale(0.6)
-        if (!this.calenderEvent.getIsEnd()) {
+        if (this.calenderEvent.getIsEnd()) {
             this.scene.remove(TIME_EVENT)
-            this.pointEvent.calculate() > 10 ? this.scene.start(SCENE_GAME_OVER_CLEAR) : this.scene.start(SCENE_GAME_OVER_FAIL)
+            this.pointEvent.calculate() > 500 ? this.scene.start(SCENE_GAME_OVER_CLEAR) : this.scene.start(SCENE_GAME_OVER_FAIL)
         }
     }
 
