@@ -46,6 +46,9 @@ class PointEvent extends Phaser.Scene {
     }
 
     setAlarmItem (alarm, index) {
+        // this.calenderEvent.pause(true)
+        console.log('calculating, index : ' + index)
+        console.log('defenseAction : ' + alarm.defenseActions)
         this.alarmItem[index] = this.actionItems.filter(item => alarm.defenseActions.includes(item.id)).length * alarm.point
         this.plusPoint += this.alarmItem[index]
     }

@@ -29,12 +29,13 @@ class PlayGameScene extends Phaser.Scene {
         this.load.audio('final-fail', 'sounds/mixkit-long-game-over-notification-276.wav')
         this.load.audio('event-success', 'sounds/mixkit-completion-of-a-level-2063.wav')
         this.load.audio('event-fail', 'sounds/mixkit-player-losing-or-failing-2042.wav')
-
         // this.load.image('play-screen', 'images/play-screen.png')
         this.load.image('service-task', 'images/service-task.png')
         this.load.image('score', 'images/score.png')
         this.load.image('close-button', 'images/close-button.png')
         this.load.image('alarm', 'images/bell.png')
+        this.load.image('alarm1', 'images/bell1.png')
+        this.load.image('alarm2', 'images/bell2.png')
         this.load.image('alarm-message', 'images/alarm-message.png')
         this.load.image('reminder', 'images/reminder.png')
         this.load.image('history', 'images/history.png')
@@ -47,6 +48,8 @@ class PlayGameScene extends Phaser.Scene {
         this.load.image('alert-pop-up', 'images/alertpopup.png')
         this.load.image('alarm-box', 'images/alarm-box.png')
         this.load.image('text-box-pop-up', 'images/text-box-pop-up.png')
+        this.load.image('result-box', 'images/result-box.png')
+        this.load.image('letter', 'images/letter.png')
 
         this.load.json('actions', 'actions.json')
         this.load.path = 'images/action/'
@@ -57,7 +60,7 @@ class PlayGameScene extends Phaser.Scene {
         this.load.image('event', 'event.png')
         this.load.image('server', 'server.png')
         this.load.image('network', 'network.png')
-        this.load.image('autoscaling', 'autoscaling.png')
+        this.load.image('security', 'security.png')
     }
 
     create () {
@@ -85,12 +88,25 @@ class PlayGameScene extends Phaser.Scene {
         // this.add.sprite(400, 300, 'play-screen')
         this.add.sprite(400, 30, 'score').setScale(0.3)
 
-        const alarm = this.add.sprite(530, 45, 'alarm').setOrigin(0.5).setScale(0.1).setInteractive()
+        this.anims.create({
+            key: 'alarming',
+            frames: [
+                { key: 'alarm' },
+                { key: 'alarm1' },
+                { key: 'alarm' },
+                { key: 'alarm2', duration: 200 }
+            ],
+            frameRate: 8,
+            repeat: -1
+        })
+        const alarm = this.add.sprite(530, 45, 'alarm').play('alarming').setOrigin(0.5).setScale(0.1).setInteractive()
+
+        // const alarm = this.add.sprite(530, 45, 'alarm').setOrigin(0.5).setScale(0.1).setInteractive()
         alarm.on('pointerup', this.onOpenAlarmEvent, this)
 
         // history
         this.pointEvent = this.scene.add('point-event', PointEvent, true)
-        const history = this.add.sprite(210, 50, 'history').setOrigin(0.5).setScale(0.1).setInteractive()
+        const history = this.add.sprite(270, 45, 'history').setOrigin(0.5).setScale(0.11).setInteractive()
         history.on('pointerup', this.onOpenHistoryEvent, this)
 
         // calender
@@ -101,32 +117,32 @@ class PlayGameScene extends Phaser.Scene {
         this.eventIndex = 0
 
         // left
-        const server = this.add.sprite(60, 140, 'server').setOrigin(0.5).setScale(0.08).setInteractive()
+        const server = this.add.sprite(63, 140, 'server').setOrigin(0.5).setScale(0.1).setInteractive()
         server.name = 'server'
         this.add.bitmapText(60, 180, 'atari', 'SERVER').setOrigin(0.5).setScale(0.17)
-        const database = this.add.sprite(60, 240, 'database').setOrigin(0.5).setScale(0.08).setInteractive()
+        const database = this.add.sprite(60, 240, 'database').setOrigin(0.5).setScale(0.12).setInteractive()
         database.name = 'database'
         this.add.bitmapText(60, 280, 'atari', 'DATABASE').setOrigin(0.5).setScale(0.17)
-        const security = this.add.sprite(60, 340, 'autoscaling').setOrigin(0.5).setScale(0.08).setInteractive()
+        const security = this.add.sprite(60, 340, 'security').setOrigin(0.5).setScale(0.08).setInteractive()
         security.name = 'security'
         this.add.bitmapText(60, 380, 'atari', 'SECURITY').setOrigin(0.5).setScale(0.17)
-        const autoscaling = this.add.sprite(60, 440, 'loadbalancing').setOrigin(0.5).setScale(0.08).setInteractive()
+        const autoscaling = this.add.sprite(60, 440, 'loadbalancing').setOrigin(0.5).setScale(0.1).setInteractive()
         autoscaling.name = 'autoscaling'
         this.add.bitmapText(60, 480, 'atari', 'SCALING').setOrigin(0.5).setScale(0.17)
 
         // right
-        const monitor = this.add.sprite(750, 140, 'monitor').setOrigin(0.5).setScale(0.08).setInteractive()
+        const monitor = this.add.sprite(750, 140, 'monitor').setOrigin(0.5).setScale(0.1).setInteractive()
         monitor.name = 'monitor'
         this.add.bitmapText(750, 180, 'atari', 'MONITOR').setOrigin(0.5).setScale(0.17)
-        const network = this.add.sprite(750, 240, 'network').setOrigin(0.5).setScale(0.08).setInteractive()
+        const network = this.add.sprite(750, 240, 'network').setOrigin(0.5).setScale(0.1).setInteractive()
         network.name = 'network'
         this.add.bitmapText(750, 280, 'atari', 'NETWORK').setOrigin(0.5).setScale(0.17)
-        const storage = this.add.sprite(750, 340, 'storage').setOrigin(0.5).setScale(0.08).setInteractive()
+        const storage = this.add.sprite(750, 340, 'storage').setOrigin(0.5).setScale(0.1).setInteractive()
         storage.name = 'storage'
         this.add.bitmapText(750, 380, 'atari', 'STORAGE').setOrigin(0.5).setScale(0.17)
-        const event = this.add.sprite(750, 440, 'event').setOrigin(0.5).setScale(0.08).setInteractive()
+        const event = this.add.sprite(750, 440, 'event').setOrigin(0.5).setScale(0.1).setInteractive()
         event.name = 'event'
-        this.add.bitmapText(750, 440, 'atari', 'EVENT').setOrigin(0.5).setScale(0.17)
+        this.add.bitmapText(750, 480, 'atari', 'EVENT').setOrigin(0.5).setScale(0.17)
         this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.point).setOrigin(0.5).setScale(0.6)
 
         /** music */
@@ -145,20 +161,74 @@ class PlayGameScene extends Phaser.Scene {
         this.alarmHistory = []
         this.actionHistory = []
         this.checkedBox = []
+        this.defenseActions = []
+        this.curentEvent = 0
+        this.startFlag = false
     }
 
     update () {
         this.alarmHistory = this.randomEvent.getHistory()
         if (this.eventIndex !== this.calenderEvent.getEventIndex()) {
+            // this.curentEvent = this.alarmHistory[this.eventIndex - 1].id
+            // console.log(this.curentEvent)
             this.eventIndex = this.calenderEvent.getEventIndex()
             this.pointEvent.setAlarmItem(this.alarmHistory[this.eventIndex - 1], this.eventIndex - 1)
             if (this.eventIndex < this.alarmHistory.length) this.alertEvent()
+            if (!this.startFlag) {
+                this.startFlag = true
+            } else {
+                const currentEvent = this.alarmHistory[this.eventIndex - 1]
+                this.defenseActions = currentEvent.defenseActions
+
+                this.resultBox = this.add.sprite(40, 150, 'result-box').setScale(0.37).setOrigin(0).setInteractive()
+                this.closeReport = this.add.sprite(660, 185, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
+                this.report = this.add.bitmapText(100, 195, 'visitor', 'REPORT').setOrigin(0).setScale(0.18)
+                this.eventTitle = this.add.text(220, 195, currentEvent.description, { font: '20px', fill: '#000' })
+                this.achievePoint = this.add.text(510, 230, '성공 포인트 : ' + currentEvent.point, { font: '16px', fill: '#EF5C5C' })
+                this.wrongActions = []
+                if (this.actionHistory.length > 0) {
+                    this.actionHistory.forEach((value, index) => {
+                        const y = 255 + index * 25
+                        this.add.bitmapText(220, y, 'visitor', value.title).setOrigin(0).setScale(0.12)
+                        const actionId = value.id
+                        if (this.defenseActions.filter(v => v === actionId).length > 0) {
+                            this.add.bitmapText(600, y, 'visitor', '( O )').setOrigin(0).setScale(0.12)
+                        } else {
+                            this.add.bitmapText(600, y, 'visitor', '( X )').setOrigin(0).setScale(0.12)
+                            this.wrongActions.push(actionId)
+                        }
+                    })
+                } else {
+                    this.add.bitmapText(750, 180, 'visitor', 'no action').setOrigin(0.5).setScale(0.17)
+                }
+
+                this.actionHistory.filter(value => value.event === currentEvent.id).forEach(ah => {
+                    this.wrongActions.forEach(wa => {
+                        if (ah.id === wa) {
+                            const wrongActionIndex = this.actionHistory.findIndex(value => value.id === wa)
+                            console.log('오답 ' + wrongActionIndex)
+                        }
+                    })
+                })
+
+                this.closeReport.on('pointerup', this.onResultCloseAlert.bind(this), this)
+            }
         }
         this.point.destroy()
         this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.calculate()).setOrigin(0.5).setScale(0.6)
     }
 
+    onResultCloseAlert () {
+        this.music[SOUND_EFFTCT_CLICK].play()
+        this.resultBox.destroy()
+        this.eventTitle.destroy()
+        this.achievePoint.destroy()
+        this.closeReport.destroy()
+        this.report.destroy()
+    }
+
     alertEvent () {
+        this.music[SOUND_EFFTCT_ERROR].play()
         this.openModal = true
         const alertUI = this.add.sprite(50, 150, 'text-box-pop-up').setScale(0.4).setOrigin(0).setInteractive()
         const reminder = this.add.sprite(140, 240, 'reminder').setOrigin(0.5).setScale(0.18).setInteractive()
@@ -196,12 +266,15 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     addActionHistoryEvent (action, index) {
+        const currentEvent = this.alarmHistory[this.eventIndex - 1]
+        console.log('current event' + currentEvent.id)
+        action.event = currentEvent.id
         this.actionHistory.push(action)
         this.pointEvent.setActionItems(this.actionHistory)
 
         const calculatedPoint = this.pointEvent.calculate()
 
-        if (calculatedPoint < 50) {
+        if (calculatedPoint < 20) {
             this.music[SOUND_EFFTCT_ERROR].play()
             this.pointEvent.setActionItems(this.actionHistory)
             this.actionHistory.pop()
