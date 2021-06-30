@@ -13,8 +13,8 @@ class Calender extends Phaser.Scene {
 
     create () {
         const year = 2021
-        this.seasonIndex = 1
-        this.currentDay = 1
+        this.seasonIndex = 2
+        this.currentDay = 2
         this.allSeason = this.cache.json.get('season')
         this.season = this.allSeason[this.seasonIndex]
         this.g = this.add.group()

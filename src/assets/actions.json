@@ -121,8 +121,8 @@
     },
     {
         "id": 16,
-        "title": "Apply Cloudwatch",
-        "description": "클라우드와치 서비스를 적용합니다.",
+        "title": "Detect server load \nby Cloudwatch alarm",
+        "description": "클라우드 와치 알림을 통해 서버 부하를 감지",
         "point": 30,
         "service": "monitor",
         "event": 0
@@ -132,7 +132,7 @@
         "title": "Apply Cloudfront",
         "description": "클라우드프론트 서비스를 적용합니다.",
         "point": 30,
-        "service": "event",
+        "service": "network",
         "event": 0
     },
     {
@@ -141,6 +141,14 @@
         "description": "S3 버킷을 생성합니다",
         "point": 30,
         "service": "storage",
+        "event": 0
+    },
+    {
+        "id": 19,
+        "title": "Track accessKey and \nsecretKey with cloud trails",
+        "description": "클라우드 트레일로 accessKey와 secretKey를 추적한다.",
+        "point": 30,
+        "service": "monitor",
         "event": 0
     }
 ]
