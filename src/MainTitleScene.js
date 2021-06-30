@@ -10,7 +10,7 @@ class MainTitleScene extends Phaser.Scene {
         this.load.bitmapFont('atari', 'fonts/atari-classic.png', './fonts/atari-classic.xml')
 
         /** Register main BGM */
-        this.load.audio('track-1', ['audio/track-1.mp3'])
+        this.load.audio('track-1', ['sounds/track-1.mp3'])
 
         /** Register start button */
         this.load.image('start-button', 'images/start-button.png')
