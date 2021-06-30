@@ -11,7 +11,7 @@ class GameOverClearScene extends Phaser.Scene {
     preload () {
         this.load.image('gameclear1', 'images/gameclear1.png')
         this.load.image('gameclear2', 'images/gameclear2.png')
-        this.load.audio(SOUND_EFFTCT_CLEAR, 'sounds/mixkit-game-level-completed-2059.wav')
+        this.load.audio(SOUND_EFFTCT_CLEAR, 'sounds/mixkit-completion-of-a-level-2063.wav')
 
         this.load.path = 'images/main-screen/'
         this.load.image('main1', 'main-img-1.png')
