@@ -327,6 +327,10 @@ class PlayGameScene extends Phaser.Scene {
         this.calenderEvent.pause(true)
         if (this.openModal) return
         this.openModal = true
+        if (this.alarmDialog) this.alarmDialog.destroy()
+        if (this.alarm) this.alarm.destroy()
+        if (this.duedateText) this.duedateText.destroy()
+        if (this.close) this.close.destroy()
         this.alarmDialog = this.add.sprite(80, 180, 'alarm-box').setOrigin(0).setScale(0.37).setInteractive()
         this.alarm = this.add.text(120, 200, '\n[알림]\n\n' + this.alarmHistory[this.eventIndex].description, { font: '20px', fill: '#fff' })
         this.duedateText = this.add.text(450, 320, '* 예상 날짜 : ' + this.dueDate, { font: '21px', fill: '#fff' })
