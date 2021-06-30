@@ -3,7 +3,7 @@
         "id": 1,
         "title": "Change EC2 Type Up",
         "description": "EC2 인스턴스의 성능을 올립니다",
-        "point": 10,
+        "point": 30,
         "service": "server",
         "event": 0
     },
@@ -11,15 +11,15 @@
         "id": 2,
         "title": "Change EC2 Type Down",
         "description": "EC2 인스턴스의 성능을 낮춥니다",
-        "point": 10,
+        "point": 30,
         "service": "server",
         "event": 0
     },
     {   
         "id": 3,
-        "title": "Buy RI",
+        "title": "Buy RI Instance",
         "description": "예약 인스턴스를 구입합니다",
-        "point": 10,
+        "point": 30,
         "service": "server",
         "event": 0
     },
@@ -27,15 +27,15 @@
         "id": 4,
         "title": "Set Strong Security Group",
         "description": "보안그룹 정책을 강화합니다",
-        "point": 10,
+        "point": 30,
         "service": "security",
         "event": 0
     },
     {
         "id": 5,
-        "title": "Don't use root account",
+        "title": "Not using root account",
         "description": "루트 계정을 사용하지 않습니다",
-        "point": 10,
+        "point": 30,
         "service": "security",
         "event": 0
     },
@@ -43,7 +43,7 @@
         "id": 6,
         "title": "Create a user-specific IAM",
         "description": "사용자별 IAM을 생성합니다",
-        "point": 10,
+        "point": 30,
         "service": "security",
         "event": 0
     },
@@ -51,23 +51,23 @@
         "id": 7,
         "title": "Modify the application\nbased on IAM Role",
         "description": "IAM Role 기반으로 어플리케이션을 수정합니다",
-        "point": 10,
+        "point": 30,
         "service": "security",
         "event": 0
     },
     {
         "id": 8,
-        "title": "Set up autoscaling",
+        "title": "Apply Autoscaling",
         "description": "오토스케일링을 설정 합니다.",
-        "point": 10,
+        "point": 30,
         "service": "autoscaling",
         "event": 0
     },
     {
         "id": 9,
-        "title": "I use Multi-AZ",
+        "title": "Apply Multi-AZ",
         "description": "멀티AZ를 사용합니다",
-        "point": 10,
+        "point": 30,
         "service": "database",
         "event": 0
     },
@@ -75,7 +75,7 @@
         "id": 10,
         "title": "Use a read replica",
         "description": "읽기 복제본을 사용합니다",
-        "point": 10,
+        "point": 30,
         "service": "database",
         "event": 0
     },
@@ -83,16 +83,64 @@
         "id": 11,
         "title": "Set automatic backup policy",
         "description": "자동 백업정책을 설정합니다",
-        "point": 10,
+        "point": 30,
         "service": "database",
         "event": 0
     },
     {
         "id": 12,
-        "title": "Configure Private/Public Subnet in VPC",
+        "title": "Configure Private/Public \n Subnet in VPC",
         "description": "VPC에서 Private/Public 서브넷을 구성합니다",
-        "point": 10,
+        "point": 30,
         "service": "network",
+        "event": 0
+    },
+    {
+        "id": 13,
+        "title": "Apply Glacier for \ndata archiving and backup",
+        "description": "백업과 아카이빙을 위해 Glacier를 적용합니다.",
+        "point": 30,
+        "service": "storage",
+        "event": 0
+    },
+    {
+        "id": 14,
+        "title": "Scale up RDS",
+        "description": "관계형 데이터베이스를 scale up 합니다.",
+        "point": 30,
+        "service": "autoscaling",
+        "event": 0
+    },
+    {
+        "id": 15,
+        "title": "Scale down RDS",
+        "description": "관계형 데이터베이스를 scale down 합니다.",
+        "point": 30,
+        "service": "autoscaling",
+        "event": 0
+    },
+    {
+        "id": 16,
+        "title": "Apply Cloudwatch",
+        "description": "클라우드와치 서비스를 적용합니다.",
+        "point": 30,
+        "service": "monitor",
+        "event": 0
+    },
+    {
+        "id": 17,
+        "title": "Apply Cloudfront",
+        "description": "클라우드프론트 서비스를 적용합니다.",
+        "point": 30,
+        "service": "event",
+        "event": 0
+    },
+    {
+        "id": 18,
+        "title": "Create S3 bucket",
+        "description": "S3 버킷을 생성합니다",
+        "point": 30,
+        "service": "storage",
         "event": 0
     }
 ]

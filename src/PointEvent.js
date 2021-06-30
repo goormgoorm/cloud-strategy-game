@@ -11,11 +11,11 @@ class PointEvent extends Phaser.Scene {
     }
 
     preload () {
-        console.log('Point Event - preload')
+        // console.log('Point Event - preload')
     }
 
     create () {
-        console.log('Point Event - create')
+        // console.log('Point Event - create')
         this.g = this.add.group()
     }
 
@@ -45,17 +45,19 @@ class PointEvent extends Phaser.Scene {
         this.g.add(works)
     }
 
+    /* START NEW EVENT - SET PLUS POINT AND NEW EVENT */
     setAlarmItem (alarm, index) {
-        // this.calenderEvent.pause(true)
-        console.log('calculating, index : ' + index)
-        console.log('defenseAction : ' + alarm.defenseActions)
         this.alarmItem[index] = this.actionItems.filter(item => alarm.defenseActions.includes(item.id)).length * alarm.point
         this.plusPoint += this.alarmItem[index]
     }
 
-    setActionItems (actionItems) {
-        this.actionItems = actionItems
+    setActionItems (action) {
+        this.actionItems.push(action)
         this.calculate()
+    }
+
+    getActions () {
+        return this.actionItems
     }
 
     calculate () {

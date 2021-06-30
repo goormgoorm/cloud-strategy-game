@@ -4,7 +4,10 @@ import {
     SOUND_BGM_OFFICE,
     SOUND_EFFTCT_CLICK,
     SOUND_EFFTCT_ERROR,
-    SOUND_EFFTCT_POINT
+    SOUND_EFFTCT_POINT,
+    SCENE_GAME_OVER_FAIL,
+    SCENE_GAME_OVER_CLEAR,
+    TIME_EVENT
 } from './constant'
 import { RandomEvent } from './RandomEvent'
 import { PointEvent } from './PointEvent'
@@ -29,7 +32,6 @@ class PlayGameScene extends Phaser.Scene {
         this.load.audio('final-fail', 'sounds/mixkit-long-game-over-notification-276.wav')
         this.load.audio('event-success', 'sounds/mixkit-completion-of-a-level-2063.wav')
         this.load.audio('event-fail', 'sounds/mixkit-player-losing-or-failing-2042.wav')
-        // this.load.image('play-screen', 'images/play-screen.png')
         this.load.image('service-task', 'images/service-task.png')
         this.load.image('score', 'images/score.png')
         this.load.image('close-button', 'images/close-button.png')
@@ -84,11 +86,9 @@ class PlayGameScene extends Phaser.Scene {
         this.add.sprite(30, 20, 'button-white').setOrigin(0).setScale(0.09).setInteractive()
         this.add.bitmapText(40, 36, 'visitor', this.playerName).setOrigin(0).setScale(0.14)
         this.add.sprite(280, 300, 'working1').play('working').setScale(0.28)
-
-        // this.add.sprite(400, 300, 'play-screen')
         this.add.sprite(400, 30, 'score').setScale(0.3)
 
-        this.anims.create({
+        this.bellAnimation = this.anims.create({
             key: 'alarming',
             frames: [
                 { key: 'alarm' },
@@ -99,6 +99,8 @@ class PlayGameScene extends Phaser.Scene {
             frameRate: 8,
             repeat: -1
         })
+        this.bellAnimation.pause()
+
         const alarm = this.add.sprite(530, 45, 'alarm').play('alarming').setOrigin(0.5).setScale(0.1).setInteractive()
 
         // const alarm = this.add.sprite(530, 45, 'alarm').setOrigin(0.5).setScale(0.1).setInteractive()
@@ -162,84 +164,88 @@ class PlayGameScene extends Phaser.Scene {
         this.actionHistory = []
         this.checkedBox = []
         this.defenseActions = []
-        this.curentEvent = 0
+        this.reportGroup = []
         this.startFlag = false
+        this.dueDate = null
     }
 
     update () {
         this.alarmHistory = this.randomEvent.getHistory()
         if (this.eventIndex !== this.calenderEvent.getEventIndex()) {
-            // this.curentEvent = this.alarmHistory[this.eventIndex - 1].id
-            // console.log(this.curentEvent)
             this.eventIndex = this.calenderEvent.getEventIndex()
             this.pointEvent.setAlarmItem(this.alarmHistory[this.eventIndex - 1], this.eventIndex - 1)
-            if (this.eventIndex < this.alarmHistory.length) this.alertEvent()
+
             if (!this.startFlag) {
                 this.startFlag = true
+                this.alertEvent()
             } else {
-                const currentEvent = this.alarmHistory[this.eventIndex - 1]
-                this.defenseActions = currentEvent.defenseActions
-
-                this.resultBox = this.add.sprite(40, 150, 'result-box').setScale(0.37).setOrigin(0).setInteractive()
-                this.closeReport = this.add.sprite(660, 185, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
-                this.report = this.add.bitmapText(100, 195, 'visitor', 'REPORT').setOrigin(0).setScale(0.18)
-                this.eventTitle = this.add.text(220, 195, currentEvent.description, { font: '20px', fill: '#000' })
-                this.achievePoint = this.add.text(510, 230, '성공 포인트 : ' + currentEvent.point, { font: '16px', fill: '#EF5C5C' })
-                this.wrongActions = []
-                if (this.actionHistory.length > 0) {
-                    this.actionHistory.forEach((value, index) => {
-                        const y = 255 + index * 25
-                        this.add.bitmapText(220, y, 'visitor', value.title).setOrigin(0).setScale(0.12)
-                        const actionId = value.id
-                        if (this.defenseActions.filter(v => v === actionId).length > 0) {
-                            this.add.bitmapText(600, y, 'visitor', '( O )').setOrigin(0).setScale(0.12)
-                        } else {
-                            this.add.bitmapText(600, y, 'visitor', '( X )').setOrigin(0).setScale(0.12)
-                            this.wrongActions.push(actionId)
-                        }
-                    })
-                } else {
-                    this.add.bitmapText(750, 180, 'visitor', 'no action').setOrigin(0.5).setScale(0.17)
-                }
-
-                this.actionHistory.filter(value => value.event === currentEvent.id).forEach(ah => {
-                    this.wrongActions.forEach(wa => {
-                        if (ah.id === wa) {
-                            const wrongActionIndex = this.actionHistory.findIndex(value => value.id === wa)
-                            console.log('오답 ' + wrongActionIndex)
-                        }
-                    })
-                })
-
-                this.closeReport.on('pointerup', this.onResultCloseAlert.bind(this), this)
+                this.alertReport()
             }
         }
         this.point.destroy()
         this.point = this.add.bitmapText(400, 45, 'atari', this.pointEvent.calculate()).setOrigin(0.5).setScale(0.6)
+        if (this.calenderEvent.getIsEnd()) {
+            this.scene.remove(TIME_EVENT)
+            this.pointEvent.calculate() > 500 ? this.scene.start(SCENE_GAME_OVER_CLEAR) : this.scene.start(SCENE_GAME_OVER_FAIL)
+        }
     }
 
-    onResultCloseAlert () {
+    onCloseAlertReport () {
         this.music[SOUND_EFFTCT_CLICK].play()
-        this.resultBox.destroy()
-        this.eventTitle.destroy()
-        this.achievePoint.destroy()
-        this.closeReport.destroy()
-        this.report.destroy()
+        this.reportGroup.forEach(child => child.destroy())
+        this.close.destroy()
+        this.actionHistory = []
+        this.alertEvent()
+    }
+
+    alertReport () {
+        this.calenderEvent.pause(true)
+        const currentEvent = this.alarmHistory[this.eventIndex - 1]
+        this.defenseActions = currentEvent.defenseActions
+        const resultbox = this.add.sprite(40, 150, 'result-box').setScale(0.37).setOrigin(0)
+        const title = this.add.bitmapText(100, 195, 'visitor', 'REPORT').setOrigin(0).setScale(0.18)
+        const eventTitle = this.add.text(220, 195, currentEvent.description, { font: '18px', fill: '#000' })
+        this.close = this.add.sprite(680, 185, 'close-button').setOrigin(0.0).setScale(0.25).setInteractive()
+
+        if (this.actionHistory.length) {
+            this.actionHistory.forEach((value, index) => {
+                const y = 255 + index * 25
+                const actionId = value.id
+                const okFlag = this.defenseActions.filter(v => v === actionId).length > 0
+                const checkedAction = this.add.bitmapText(220, y, 'visitor', `${value.title} (${okFlag ? currentEvent.point + 'p' : '0p'})`).setOrigin(0).setScale(0.12)
+                const OX = okFlag ? 'O' : 'X'
+                const resultAnswer = this.add.bitmapText(640, y, 'visitor', `( ${OX} )`).setOrigin(0).setScale(0.12)
+                this.reportGroup.push(checkedAction)
+                this.reportGroup.push(resultAnswer)
+            })
+        } else {
+            const noAction = this.add.bitmapText(300, 255, 'visitor', 'no action').setOrigin(0.5).setScale(0.17)
+            noAction.name = 'noAction'
+            this.reportGroup.push(noAction)
+        }
+
+        this.reportGroup.push(resultbox)
+        this.reportGroup.push(title)
+        this.reportGroup.push(eventTitle)
+        this.close.on('pointerup', this.onCloseAlertReport.bind(this), this)
     }
 
     alertEvent () {
         this.music[SOUND_EFFTCT_ERROR].play()
+        this.dueDate = this.calenderEvent.getDueDate()
         this.openModal = true
         const alertUI = this.add.sprite(50, 150, 'text-box-pop-up').setScale(0.4).setOrigin(0).setInteractive()
         const reminder = this.add.sprite(140, 240, 'reminder').setOrigin(0.5).setScale(0.18).setInteractive()
         const alertText = this.add.text(220, 200, '문제가 생겼습니다!\n\n알림 내용을 확인하시고\n\n시간 내에 적절한 조치를 취해주세요.', { font: '20px', fill: '#000' })
-        this.calenderEvent.pause()
+        this.calenderEvent.pause(true)
+        this.bellAnimation.resume()
         alertUI.on('pointerup', () => {
             alertUI.destroy()
             alertText.destroy()
             reminder.destroy()
             this.openModal = false
             this.calenderEvent.start()
+            this.bellAnimation.pause()
         }, this)
     }
 
@@ -266,31 +272,28 @@ class PlayGameScene extends Phaser.Scene {
     }
 
     addActionHistoryEvent (action, index) {
-        const currentEvent = this.alarmHistory[this.eventIndex - 1]
-        console.log('current event' + currentEvent.id)
-        action.event = currentEvent.id
-        this.actionHistory.push(action)
-        this.pointEvent.setActionItems(this.actionHistory)
-
         const calculatedPoint = this.pointEvent.calculate()
 
-        if (calculatedPoint < 20) {
+        if (calculatedPoint < 30) {
             this.music[SOUND_EFFTCT_ERROR].play()
-            this.pointEvent.setActionItems(this.actionHistory)
-            this.actionHistory.pop()
+            // this.pointEvent.setActionItems(this.actionHistory)
+            // this.actionHistory.pop()
             if (!this.alertFlag) {
-                this.alertClose = this.add.sprite(530, 230, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
+                // this.alertClose = this.add.sprite(530, 230, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
                 if (this.alert) this.alert.destroy()
                 if (this.alertClose) this.alertClose.destroy()
                 if (this.alertMessage) this.alertMessage.destroy()
-                this.alert = this.add.sprite(400, 300, 'alert-pop-up').setScale(0.3)
-                this.alertMessage = this.add.bitmapText(395, 300, 'atari', 'YOU HAVE NO POINTS').setOrigin(0.5).setScale(0.25)
+                this.alert = this.add.sprite(400, 300, 'alert-pop-up').setScale(0.4)
+                this.alertMessage = this.add.bitmapText(395, 300, 'atari', 'YOU HAVE NOT ENOUGH POINTS \n GAME OVER').setOrigin(0.5).setScale(0.25)
                 this.alertFlag = true
 
-                this.alertClose.on('pointerup', this.onCloseAlert.bind(this), this)
+                this.scene.start(SCENE_GAME_OVER_FAIL)
+                // this.alertClose.on('pointerup', this.onCloseAlert.bind(this), this)
             }
         } else {
             this.music[SOUND_EFFTCT_POINT].play()
+            this.actionHistory.push(action)
+            this.pointEvent.setActionItems(action)
             this.checkedBox[index].destroy()
             this.checkedBox[index] = this.add.sprite(113, 196.5 + (index * 40), 'checked-box').setOrigin(0.0).setScale(0.15).setInteractive()
             // this.point.destroy()
@@ -298,13 +301,13 @@ class PlayGameScene extends Phaser.Scene {
         }
     }
 
-    onCloseAlert () {
-        this.music[SOUND_EFFTCT_CLICK].play()
-        this.alert.destroy()
-        this.alertClose.destroy()
-        this.alertMessage.destroy()
-        this.alertFlag = false
-    }
+    // onCloseAlert () {
+    //     this.music[SOUND_EFFTCT_CLICK].play()
+    //     this.alert.destroy()
+    //     this.alertClose.destroy()
+    //     this.alertMessage.destroy()
+    //     this.alertFlag = false
+    // }
 
     onCloseTaskEvent (service) {
         if (this.alertFlag) return
@@ -325,18 +328,18 @@ class PlayGameScene extends Phaser.Scene {
         if (this.openModal) return
         this.openModal = true
         this.alarmDialog = this.add.sprite(80, 180, 'alarm-box').setOrigin(0).setScale(0.37).setInteractive()
-        // this.alarmTitle = this.add.text(350, 100, 'YOUR TASKS', { font: '24px', fill: '#000' })
         this.alarm = this.add.text(120, 200, '\n[알림]\n\n' + this.alarmHistory[this.eventIndex].description, { font: '20px', fill: '#fff' })
+        this.duedateText = this.add.text(450, 320, '* 예상 날짜 : ' + this.dueDate, { font: '21px', fill: '#fff' })
         this.close = this.add.sprite(650, 190, 'close-button').setOrigin(0.0).setScale(0.3).setInteractive()
         this.close.on('pointerup', this.onCloseAlarmEvent, this)
     }
 
     onCloseAlarmEvent () {
-        console.log('close button clicked')
         this.music[SOUND_EFFTCT_CLICK].play()
         this.openModal = false
         this.alarmDialog.destroy()
         this.alarm.destroy()
+        this.duedateText.destroy()
         this.close.destroy()
         this.calenderEvent.start()
     }
