@@ -12,7 +12,7 @@ window.addEventListener('load', function () {
         width: 800,
         height: 600,
         backgroundColor: '#4eade6',
-        gameTitle: 'GRUMGRUM',
+        gameTitle: 'GOORMGOORM',
         scene: [
             MainTitleScene,
             MainCharacterScene,

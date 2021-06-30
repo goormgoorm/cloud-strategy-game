@@ -161,7 +161,7 @@ class MainTitleScene extends Phaser.Scene {
 
         /** Add game title font */
         const config = this.game.config
-        this.add.bitmapText(385, 110, 'atari', config.gameTitle).setOrigin(0.5).setScale(1.3)
+        this.add.bitmapText(385, 110, 'atari', config.gameTitle).setOrigin(0.5).setScale(1.0)
         this.add.bitmapText(640, 530, 'atari', 'MELONA X MEGATHON').setOrigin(0.5).setScale(0.2)
         this.add.bitmapText(640, 550, 'atari', 'MEGAZONE CLOUD').setOrigin(0.5).setScale(0.2)
 
