@@ -5,8 +5,8 @@
 전략 시뮬레이션 게임 처럼 쉽게 즐길 수 있습니다.
 
 
-## 체험해보기
-[live demo](https://goormgoorm.itch.io/goormgoorm)
+## Live Demo
+[link](https://goormgoorm.itch.io/goormgoorm)
 
 ## 스크린샷
 ![001](https://github.com/goormgoorm/cloud-strategy-game/blob/master/public/screenshot/001.png?raw=true)
